@@ -1,204 +1,172 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <!-- LabFlow PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#19d184">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="LabFlow">
-  <link rel="apple-touch-icon" href="icon-192.png">
-
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>LabFlow Mobile Results</title>
+<title>LabFlow Mobile</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#11bfa5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
-:root{--bg:#f4f8fc;--card:#fff;--text:#102033;--muted:#687b8f;--line:#dbe6f1;--brand:#0ea5e9;--brand2:#10b981;--danger:#ef476f;--warn:#f59e0b;--ok:#10b981;--shadow:0 12px 28px rgba(20,70,115,.10);--r:18px}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;background:linear-gradient(180deg,#eff7ff,#fff);color:var(--text);font-family:Tahoma,Arial,sans-serif;padding:0 0 82px}button,input,select,textarea{font:inherit}button{cursor:pointer}.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 14px}.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:white;font-weight:900}.brand h1{font-size:17px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:11px}.sync{font-size:11px;color:var(--muted);text-align:left}.page{display:none;padding:14px}.page.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}.grid{display:grid;gap:10px}.stats{grid-template-columns:1fr 1fr}.stat{padding:14px;border-radius:16px;background:#fff;border:1px solid var(--line)}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{display:block;font-size:22px;margin-top:6px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0 12px}.section-title h2{font-size:20px;margin:0}.muted{color:var(--muted)}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.field label{font-size:12px;color:#40566d;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:14px;padding:12px;outline:0}.field textarea{min-height:72px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:14px;padding:12px 14px;font-weight:900;background:#eef6ff;color:#0c4a6e;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}.btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white}.btn.danger{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}.btn.ghost{background:#fff;color:#17314a;border:1px solid var(--line)}.btn.warn{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}.btn.small{padding:8px 10px;border-radius:11px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.list{display:flex;flex-direction:column;gap:10px}.item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}.item-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.item b{font-size:15px}.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;background:#f1f7ff;color:#31526e;font-size:11px;font-weight:800}.pill.ok{background:#ecfdf5;color:#047857}.pill.warn{background:#fffbeb;color:#a16207}.pill.danger{background:#fff1f2;color:#be123c}.money{font-weight:900;color:#07885f}.search{position:sticky;top:71px;z-index:3;background:linear-gradient(180deg,#f7fbff,#f7fbff00);padding-bottom:8px}.empty{text-align:center;color:var(--muted);padding:24px 10px}.bottom{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}.navbtn{border:0;background:transparent;color:#587087;border-radius:13px;padding:7px 2px;font-weight:800;font-size:10px}.navbtn span{display:block;font-size:20px;margin-bottom:2px}.navbtn.active{background:#e9f7ff;color:#0c4a6e}.toast{position:fixed;bottom:92px;right:12px;left:12px;z-index:20;background:#102033;color:white;border-radius:16px;padding:12px 14px;box-shadow:0 16px 40px rgba(0,0,0,.25);display:none}.toast.show{display:block}.login-block{min-height:75vh;display:grid;place-items:center;padding:20px}.danger-text{color:#be123c}.hide{display:none!important}.result-input{display:grid;grid-template-columns:1fr;gap:8px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fbfdff;margin-bottom:10px}.test-name{font-weight:900}.tiny{font-size:11px;color:var(--muted);line-height:1.7}.nowrap{white-space:nowrap}.quick-status{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}@media(min-width:760px){body{max-width:560px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}.bottom{max-width:560px;margin:auto}.toast{max-width:536px;margin:auto}.stats{grid-template-columns:repeat(4,1fr)}}
+:root{
+  --bg:#eef6f7;--ink:#102333;--muted:#6a7b88;--line:#dce8ee;--card:#ffffff;
+  --brand:#14b8a6;--brand2:#27d284;--blue:#2296ff;--danger:#ef476f;--warn:#f59e0b;--ok:#12a66a;
+  --shadow:0 16px 38px rgba(21,71,90,.12);--r:22px;--bottom:82px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;min-height:100%;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,"Segoe UI",sans-serif;overflow-x:hidden}
+body{padding:0 0 calc(var(--bottom) + env(safe-area-inset-bottom));}
+button,input,select,textarea{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}.hide{display:none!important}
+.app-bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#0b2534 0,#0c3140 210px,#eef6f7 211px,#f8fbfc 100%)}
+.shell{width:100%;max-width:none;margin:0;padding:0 14px 14px}
+.header{position:sticky;top:0;z-index:20;margin:0 -14px;padding:calc(12px + env(safe-area-inset-top)) 14px 16px;background:linear-gradient(135deg,#0c2a3b,#0a3a44 58%,#0d5a50);color:#fff;border-bottom-left-radius:28px;border-bottom-right-radius:28px;box-shadow:0 12px 32px rgba(0,0,0,.16)}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;min-width:0}.logo{width:46px;height:46px;border-radius:17px;background:linear-gradient(135deg,#18dec0,#32dc82);display:grid;place-items:center;color:#06231f;font-weight:1000;font-size:18px;box-shadow:0 12px 24px rgba(20,184,166,.32)}
+.brand-text{min-width:0}.brand h1{margin:0;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand p{margin:4px 0 0;color:rgba(255,255,255,.72);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top-actions{display:flex;align-items:center;gap:8px}.round{width:42px;height:42px;border:0;border-radius:15px;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;font-size:18px}.sync-pill{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.12);color:#dff7f1;font-size:11px}.sync-dot{width:8px;height:8px;border-radius:99px;background:#69f0ae;box-shadow:0 0 0 5px rgba(105,240,174,.12)}
+.hero-card{margin-top:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.hero-card b{display:block;font-size:20px}.hero-card span{display:block;color:rgba(255,255,255,.72);font-size:12px;margin-top:5px}.hero-number{min-width:74px;text-align:center;background:#fff;color:#0c3b42;border-radius:20px;padding:10px}.hero-number strong{font-size:26px;display:block}.page{display:none;padding-top:14px}.page.active{display:block}.card{background:var(--card);border:1px solid rgba(180,200,210,.55);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px}.section-head h2{font-size:21px;margin:0}.section-head small{color:var(--muted);font-weight:700}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:-28px;position:relative;z-index:3}.stat{background:#fff;border:1px solid rgba(180,200,210,.55);border-radius:22px;padding:14px;box-shadow:var(--shadow);min-height:98px;display:flex;flex-direction:column;justify-content:space-between}.stat .ico{width:34px;height:34px;border-radius:13px;background:#e9fbf7;display:grid;place-items:center;margin-bottom:8px}.stat span{color:var(--muted);font-size:12px;font-weight:800}.stat b{font-size:24px;letter-spacing:-.5px}.stat.blue .ico{background:#eaf4ff}.stat.warn .ico{background:#fff7e8}.stat.danger .ico{background:#fff0f3}.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick button,.btn{border:0;border-radius:16px;padding:13px 14px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;gap:8px}.quick button{background:#f1f8fb;color:#17384a}.btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#06231f}.btn.ghost{background:#fff;color:#19384a;border:1px solid var(--line)}.btn.danger{background:#fff0f3;color:#be123c;border:1px solid #ffd2dc}.btn.warn{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}.btn.small{border-radius:13px;padding:9px 11px;font-size:12px}.toolbar{position:sticky;top:calc(76px + env(safe-area-inset-top));z-index:10;background:linear-gradient(180deg,var(--bg) 65%,rgba(238,246,247,0));padding-bottom:10px}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.field label{font-size:12px;color:#496170;font-weight:900}.field input,.field select,.field textarea{width:100%;background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px 14px;color:var(--ink);outline:0;box-shadow:0 2px 0 rgba(10,30,40,.02) inset}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(20,184,166,.13)}.field textarea{min-height:90px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{border:1px solid var(--line);background:#fff;color:#345367;padding:9px 12px;border-radius:999px;font-weight:900;white-space:nowrap;font-size:12px}.chip.active{background:#dffaf1;border-color:#6ee7bd;color:#075e4f}.list{display:flex;flex-direction:column;gap:10px}.item{background:#fff;border:1px solid rgba(180,200,210,.58);border-radius:21px;padding:13px;box-shadow:0 10px 22px rgba(21,71,90,.06)}.item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.item b{font-size:16px}.muted{color:var(--muted)}.tiny{font-size:11px;color:var(--muted);line-height:1.8}.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 9px;background:#eff7fb;color:#31526e;font-size:11px;font-weight:1000;white-space:nowrap}.pill.ok{background:#e9fbf3;color:#047857}.pill.warn{background:#fffbeb;color:#a16207}.pill.danger{background:#fff1f2;color:#be123c}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.empty{text-align:center;color:var(--muted);padding:26px 10px}.result-input{display:grid;gap:9px;border:1px solid var(--line);border-radius:18px;background:#fbfdff;padding:12px;margin-bottom:10px}.test-name{font-weight:1000}.money{font-weight:1000;color:#07885f}.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(18px);border-top:1px solid rgba(160,185,200,.45);display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:7px 8px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -12px 28px rgba(20,70,90,.10)}.navbtn{border:0;background:transparent;color:#6f8391;border-radius:17px;padding:8px 2px 7px;font-weight:1000;font-size:10px}.navbtn span{display:block;font-size:20px;line-height:1;margin-bottom:4px}.navbtn.active{background:#e4faf4;color:#087463}.toast{position:fixed;left:14px;right:14px;bottom:calc(var(--bottom) + 14px + env(safe-area-inset-bottom));z-index:80;background:#102333;color:#fff;border-radius:18px;padding:13px 14px;box-shadow:0 18px 44px rgba(0,0,0,.26);display:none}.toast.show{display:block}.blocked{min-height:100dvh;display:grid;place-items:center;padding:20px}.blocked .card{width:100%;max-width:420px}.status-select{min-width:130px}.full-link{width:100%;margin-top:6px}@media(max-width:360px){.shell{padding-left:10px;padding-right:10px}.header{margin-left:-10px;margin-right:-10px;padding-left:10px;padding-right:10px}.stat b{font-size:21px}.item b{font-size:14px}.navbtn{font-size:9px}.navbtn span{font-size:18px}}@media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr);margin-top:-22px}.quick{grid-template-columns:repeat(4,1fr)}.shell{padding-left:18px;padding-right:18px}.header{margin-left:-18px;margin-right:-18px}}
 </style>
 </head>
 <body>
-<div class="top">
-  <div class="toprow">
-    <div class="brand"><div class="logo">LF</div><div><h1 id="labTitle">LabFlow Mobile</h1><p id="userLine">جاري التحقق...</p></div></div>
-    <div class="sync"><div id="syncState">مزامنة</div><div id="todayText"></div></div>
+<div class="app-bg"></div>
+<div id="blocked" class="blocked hide"><div class="card"><h2 style="margin-top:0">تحتاج تسجيل دخول</h2><p id="blockedMsg" class="muted">افتح صفحة الدخول وسجل بنفس حساب المختبر.</p><button class="btn primary full-link" onclick="location.href='login.html'">فتح تسجيل الدخول</button></div></div>
+
+<div id="appRoot" class="hide">
+  <div class="shell">
+    <header class="header">
+      <div class="header-row">
+        <div class="brand"><div class="logo">LF</div><div class="brand-text"><h1 id="labTitle">LabFlow</h1><p id="userLine">جاري المزامنة...</p></div></div>
+        <div class="top-actions"><button class="round" onclick="renderAll()" title="تحديث">↻</button></div>
+      </div>
+      <div class="sync-pill"><span class="sync-dot"></span><span id="syncState">متصل بالسحابة</span><span id="todayText"></span></div>
+      <div class="hero-card"><div><b>متابعة المختبر</b><span>نتائج، مرضى، حسابات وشفتات مرتبطة بالنسخة الكاملة</span></div><div class="hero-number"><strong id="heroToday">0</strong><span>طلب اليوم</span></div></div>
+    </header>
+
+    <main>
+      <section id="home" class="page active">
+        <div class="stats">
+          <div class="stat"><div class="ico">🧾</div><span>طلبات اليوم</span><b id="stTodayOrders">0</b></div>
+          <div class="stat blue"><div class="ico">✅</div><span>جاهزة</span><b id="stReady">0</b></div>
+          <div class="stat warn"><div class="ico">💰</div><span>المدفوع</span><b id="stPaid">0</b></div>
+          <div class="stat danger"><div class="ico">📌</div><span>الباقي</span><b id="stRemain">0</b></div>
+        </div>
+        <div class="card"><div class="section-head"><h2>اختصارات</h2><small>سريع</small></div><div class="quick"><button onclick="go('results')">🧪 النتائج</button><button onclick="go('patients')">👤 المرضى</button><button onclick="go('cash')">💰 الحسابات</button><button onclick="go('shift')">⏱ الشفتات</button></div></div>
+        <div class="card"><div class="section-head"><h2>آخر الطلبات</h2><small id="recentCount">0</small></div><div id="recentOrders" class="list"></div></div>
+      </section>
+
+      <section id="results" class="page">
+        <div class="section-head"><h2>النتائج</h2><button class="btn small ghost" onclick="renderResults()">تحديث</button></div>
+        <div class="toolbar">
+          <div class="field"><input id="resultSearch" oninput="renderResults()" placeholder="بحث باسم المريض أو رقم الطلب أو التحليل" /></div>
+          <div class="chips" id="resultChips">
+            <button class="chip active" data-filter="all" onclick="setResultFilter('all')">الكل</button>
+            <button class="chip" data-filter="new" onclick="setResultFilter('new')">بانتظار السحب</button>
+            <button class="chip" data-filter="drawn" onclick="setResultFilter('drawn')">تم السحب</button>
+            <button class="chip" data-filter="processing" onclick="setResultFilter('processing')">قيد التحليل</button>
+            <button class="chip" data-filter="ready" onclick="setResultFilter('ready')">جاهزة</button>
+          </div>
+        </div>
+        <div id="resultsList" class="list"></div>
+      </section>
+
+      <section id="resultEdit" class="page">
+        <div class="section-head"><h2>إدخال النتيجة</h2><button class="btn small ghost" onclick="go('results')">رجوع</button></div>
+        <div id="resultEditBox"></div>
+      </section>
+
+      <section id="patients" class="page">
+        <div class="section-head"><h2>المرضى</h2><small id="patientsTotal">0</small></div>
+        <div class="toolbar"><div class="field"><input id="patientSearch" oninput="renderPatients()" placeholder="بحث باسم أو رقم هاتف" /></div></div>
+        <div id="patientsList" class="list"></div>
+      </section>
+
+      <section id="cash" class="page">
+        <div class="section-head"><h2>الحسابات</h2><small>اليوم</small></div>
+        <div class="stats" style="margin-top:0">
+          <div class="stat"><div class="ico">🧾</div><span>الإجمالي</span><b id="cashTotal">0</b></div>
+          <div class="stat blue"><div class="ico">💵</div><span>المدفوع</span><b id="cashPaid">0</b></div>
+          <div class="stat danger"><div class="ico">📉</div><span>مصروف</span><b id="cashExp">0</b></div>
+          <div class="stat warn"><div class="ico">📊</div><span>الصافي</span><b id="cashNet">0</b></div>
+        </div>
+        <div class="card"><div class="section-head"><h2>إضافة مصروف</h2></div><div class="field"><label>البيان</label><input id="expTitle" placeholder="شراء مواد / نقل / غيره" /></div><div class="field"><label>المبلغ</label><input id="expAmount" inputmode="decimal" placeholder="0" /></div><button class="btn primary full-link" onclick="addExpense()">حفظ المصروف</button></div>
+        <div class="card"><div class="section-head"><h2>مصروفات اليوم</h2></div><div id="expensesList" class="list"></div></div>
+      </section>
+
+      <section id="shift" class="page">
+        <div class="section-head"><h2>الشفتات</h2><span id="shiftState" class="pill">لا يوجد شفت</span></div>
+        <div id="openShiftBox" class="card">
+          <div class="field"><label>اسم الموظف</label><input id="shEmp" list="employeesList" placeholder="اسم الموظف" /></div><datalist id="employeesList"></datalist>
+          <div class="row"><div class="field"><label>نوع الشفت</label><select id="shName"><option>صباحي</option><option>مسائي</option><option>ليلي</option></select></div><div class="field"><label>صندوق البداية</label><input id="shOpenCash" inputmode="decimal" value="0" /></div></div>
+          <button class="btn primary full-link" onclick="openShift()">فتح شفت</button>
+        </div>
+        <div id="currentShiftBox" class="card hide"><div class="section-head"><h2>الشفت الحالي</h2></div><div id="currentShiftInfo" class="muted"></div><div class="stats" style="margin-top:10px"><div class="stat"><span>طلبات</span><b id="shOrders">0</b></div><div class="stat blue"><span>مدفوع</span><b id="shPaid">0</b></div><div class="stat danger"><span>مصروف</span><b id="shExp">0</b></div><div class="stat warn"><span>الصافي</span><b id="shNet">0</b></div></div><button class="btn danger full-link" onclick="closeShift()">تقفيل الشفت</button></div>
+        <div class="card"><div class="section-head"><h2>سجل الشفتات</h2></div><div id="shiftHistory" class="list"></div></div>
+      </section>
+
+      <section id="more" class="page">
+        <div class="section-head"><h2>المزيد</h2></div>
+        <div class="card"><button class="btn ghost full-link" onclick="location.href='index.html'">فتح النسخة الكاملة</button><button class="btn ghost full-link" onclick="renderAll()">تحديث البيانات</button><button class="btn danger full-link" onclick="logout()">تسجيل خروج</button><p class="tiny">هذه نسخة متابعة موبايل فقط. التسجيل الكامل وإضافة التحاليل يبقى من النسخة الكاملة، وكل البيانات مربوطة بنفس حساب Firebase.</p></div>
+      </section>
+    </main>
   </div>
+
+  <nav class="bottom-nav">
+    <button class="navbtn active" data-go="home" onclick="go('home')"><span>🏠</span>الرئيسية</button>
+    <button class="navbtn" data-go="results" onclick="go('results')"><span>🧪</span>النتائج</button>
+    <button class="navbtn" data-go="patients" onclick="go('patients')"><span>👤</span>المرضى</button>
+    <button class="navbtn" data-go="cash" onclick="go('cash')"><span>💰</span>الحسابات</button>
+    <button class="navbtn" data-go="more" onclick="go('more')"><span>☰</span>المزيد</button>
+  </nav>
 </div>
-
-<div id="blocked" class="login-block hide"><div class="card"><h2>لا يمكن فتح النسخة</h2><p id="blockedMsg" class="danger-text">يرجى تسجيل الدخول أولاً.</p><button class="btn primary" onclick="location.href='login.html'">فتح تسجيل الدخول</button></div></div>
-
-<main id="appRoot" class="hide">
-<section id="home" class="page active">
-  <div class="section-title"><h2>الرئيسية</h2><button class="btn small ghost" onclick="renderAll()">تحديث</button></div>
-  <div class="grid stats">
-    <div class="stat"><span>طلبات اليوم</span><b id="stTodayOrders">0</b></div>
-    <div class="stat"><span>جاهزة</span><b id="stReady">0</b></div>
-    <div class="stat"><span>المدفوع</span><b id="stPaid">0</b></div>
-    <div class="stat"><span>الباقي</span><b id="stRemain">0</b></div>
-  </div>
-  <div class="card"><div class="section-title"><h2>اختصارات</h2></div><div class="actions"><button class="btn primary" onclick="go('results')">إدارة النتائج</button><button class="btn ghost" onclick="go('patients')">المرضى</button><button class="btn ghost" onclick="go('cash')">الحسابات</button></div></div>
-  <div class="card"><div class="section-title"><h2>آخر الطلبات من النسخة الكاملة</h2><span class="muted" id="recentCount"></span></div><div id="recentOrders" class="list"></div></div>
-</section>
-
-<section id="results" class="page">
-  <div class="section-title"><h2>النتائج</h2><button class="btn small ghost" onclick="renderResults()">تحديث</button></div>
-  <div class="row">
-    <div class="field"><input id="resultSearch" oninput="renderResults()" placeholder="بحث باسم / رقم طلب / تحليل" /></div>
-    <div class="field"><select id="resultFilter" onchange="renderResults()"><option value="all">الكل</option><option value="new">بانتظار السحب</option><option value="drawn">تم السحب</option><option value="processing">قيد التحليل</option><option value="ready">جاهزة</option></select></div>
-  </div>
-  <div id="resultsList" class="list"></div>
-</section>
-
-<section id="resultEdit" class="page">
-  <div class="section-title"><h2>إدخال النتيجة</h2><button class="btn small ghost" onclick="go('results')">رجوع</button></div>
-  <div id="resultEditBox"></div>
-</section>
-
-<section id="patients" class="page">
-  <div class="section-title"><h2>المرضى</h2><span class="muted" id="patientsTotal">0</span></div>
-  <div class="search field"><input id="patientSearch" oninput="renderPatients()" placeholder="بحث باسم أو رقم" /></div>
-  <div id="patientsList" class="list"></div>
-</section>
-
-<section id="cash" class="page">
-  <div class="section-title"><h2>الحسابات</h2><span class="muted">اليوم</span></div>
-  <div class="grid stats">
-    <div class="stat"><span>إجمالي</span><b id="cashTotal">0</b></div>
-    <div class="stat"><span>مدفوع</span><b id="cashPaid">0</b></div>
-    <div class="stat"><span>مصروف</span><b id="cashExp">0</b></div>
-    <div class="stat"><span>الصافي</span><b id="cashNet">0</b></div>
-  </div>
-  <div class="card"><h3 style="margin-top:0">إضافة مصروف</h3><div class="field"><label>البيان</label><input id="expTitle" placeholder="شراء مواد / نقل / غيره" /></div><div class="field"><label>المبلغ</label><input id="expAmount" inputmode="decimal" placeholder="0" /></div><button class="btn primary" style="width:100%" onclick="addExpense()">حفظ المصروف</button></div>
-  <div class="card"><div class="section-title"><h2>مصروفات اليوم</h2></div><div id="expensesList" class="list"></div></div>
-</section>
-
-<section id="shift" class="page">
-  <div class="section-title"><h2>الشفتات</h2><span id="shiftState" class="pill">لا يوجد شفت</span></div>
-  <div id="openShiftBox" class="card">
-    <div class="field"><label>اسم الموظف</label><input id="shEmp" list="employeesList" placeholder="اسم الموظف" /></div>
-    <datalist id="employeesList"></datalist>
-    <div class="row"><div class="field"><label>نوع الشفت</label><select id="shName"><option>صباحي</option><option>مسائي</option><option>ليلي</option></select></div><div class="field"><label>صندوق البداية</label><input id="shOpenCash" inputmode="decimal" value="0" /></div></div>
-    <button class="btn primary" style="width:100%" onclick="openShift()">فتح شفت</button>
-  </div>
-  <div id="currentShiftBox" class="card hide"><h3 style="margin-top:0">الشفت الحالي</h3><div id="currentShiftInfo" class="muted"></div><div class="grid stats" style="margin-top:10px"><div class="stat"><span>طلبات</span><b id="shOrders">0</b></div><div class="stat"><span>مدفوع</span><b id="shPaid">0</b></div><div class="stat"><span>مصروف</span><b id="shExp">0</b></div><div class="stat"><span>الصافي</span><b id="shNet">0</b></div></div><button class="btn warn" style="width:100%;margin-top:10px" onclick="closeShift()">تقفيل الشفت</button></div>
-  <div class="card"><div class="section-title"><h2>سجل الشفتات</h2></div><div id="shiftHistory" class="list"></div></div>
-</section>
-
-<section id="more" class="page">
-  <div class="section-title"><h2>الإعدادات</h2></div>
-  <div class="card"><p class="muted" id="accountInfo"></p><div class="actions"><button class="btn ghost" onclick="location.href='index.html'">فتح النسخة الكاملة</button><button class="btn ghost" onclick="location.reload()">إعادة تحميل</button><button class="btn danger" onclick="logout()">تسجيل خروج</button></div></div>
-  <div class="card"><h3 style="margin-top:0">ملاحظة</h3><p class="muted">هذه نسخة موبايل مرتبطة بنفس حساب النسخة الكاملة. لا توجد صفحة تسجيل جديد هنا. الطلبات تنضاف من النسخة الكاملة، ومن هنا تتابع النتائج والمرضى والحسابات والشفتات.</p></div>
-</section>
-</main>
-
-<nav class="bottom" id="bottomNav">
-  <button class="navbtn active" data-page="home" onclick="go('home')"><span>🏠</span>رئيسية</button>
-  <button class="navbtn" data-page="results" onclick="go('results')"><span>🧪</span>نتائج</button>
-  <button class="navbtn" data-page="patients" onclick="go('patients')"><span>👤</span>مرضى</button>
-  <button class="navbtn" data-page="cash" onclick="go('cash')"><span>💰</span>حسابات</button>
-  <button class="navbtn" data-page="shift" onclick="go('shift')"><span>⏱️</span>شفت</button>
-  <button class="navbtn" data-page="more" onclick="go('more')"><span>⚙️</span>المزيد</button>
-</nav>
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
 
 <script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 const firebaseConfig={apiKey:"AIzaSyB5MTJRDNILD3KalDIMmdOQxGFPsBgwOC8",authDomain:"labflow-a8cdc.firebaseapp.com",databaseURL:"https://labflow-a8cdc-default-rtdb.asia-southeast1.firebasedatabase.app/",projectId:"labflow-a8cdc",storageBucket:"labflow-a8cdc.firebasestorage.app",messagingSenderId:"23108604166",appId:"1:23108604166:web:d4888aa101507391e9ce87"};
-firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.database();
-let uid=null,userEmail='',userRef=null,cloudRef=null,editingOrderId=null;let state={lab:{},patients:[],orders:[],tests:[],offers:[],expenses:[],employees:[],shiftHistory:[],currentShift:null};
-const $=id=>document.getElementById(id);const now=()=>new Date().toISOString();const dateKey=(iso)=>{const d=iso?new Date(iso):new Date();return isNaN(d)?'':d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0')};
-const n=v=>Number(String(v||0).replace(/,/g,''))||0;const money=v=>n(v).toLocaleString('ar-IQ');const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2500)}
-function setSync(t){$('syncState').textContent=t}function showBlocked(msg){$('blockedMsg').textContent=msg;$('blocked').classList.remove('hide');$('appRoot').classList.add('hide');$('bottomNav').classList.add('hide')}
-function showApp(){ $('blocked').classList.add('hide');$('appRoot').classList.remove('hide');$('bottomNav').classList.remove('hide') }
-function statusText(s){return {new:'بانتظار السحب',drawn:'تم السحب',processing:'قيد التحليل',ready:'جاهزة'}[s]||'بانتظار السحب'}
-function statusPill(s){const c=s==='ready'?'ok':(s==='processing'||s==='drawn'?'warn':'');return `<span class="pill ${c}">${statusText(s)}</span>`}
-function normalize(d){d=d||{};return {...d,lab:d.lab||{},patients:Array.isArray(d.patients)?d.patients:[],orders:Array.isArray(d.orders)?d.orders:[],tests:Array.isArray(d.tests)?d.tests:[],offers:Array.isArray(d.offers)?d.offers:[],expenses:Array.isArray(d.expenses)?d.expenses:[],employees:Array.isArray(d.employees)?d.employees:[],shiftHistory:Array.isArray(d.shiftHistory)?d.shiftHistory:[],currentShift:d.currentShift||null}}
-function isActiveDevice(userData){const did=localStorage.getItem('device_id');if(!did)return false;const v=(userData.activeDevices||{})[did];return !!v}
-function validateAccount(userData){if(!userData)return 'الحساب غير موجود بقاعدة البيانات.';if(userData.status!=='active')return 'هذا الاشتراك موقوف.';if(userData.expiresAtMs&&Number(userData.expiresAtMs)<Date.now())return 'انتهى الاشتراك.';if(!isActiveDevice(userData))return 'هذا الجهاز غير مربوط أو تم تصفير الأجهزة.';return ''}
-auth.onAuthStateChanged(user=>{if(!user){showBlocked('لا يوجد تسجيل دخول. افتح login.html وسجل دخول أولاً.');return}uid=user.uid;userEmail=user.email||'';userRef=db.ref('users/'+uid);cloudRef=userRef.child('cloudData');$('userLine').textContent=userEmail;$('accountInfo').textContent='الحساب: '+userEmail;userRef.on('value',snap=>{const userData=snap.val();const err=validateAccount(userData);if(err){auth.signOut();showBlocked(err);return}showApp();state=normalize(userData.cloudData||{});if(userData.email) $('userLine').textContent=userData.email;if(state.lab?.name)$('labTitle').textContent=state.lab.name;renderAll();setSync('متصل بالسحابة')},e=>showBlocked('خطأ قراءة Firebase: '+e.message))});
-function saveFields(fields){if(!cloudRef){toast('لم يتم الاتصال بعد');return Promise.reject()}fields.updatedAt=now();fields.updatedFrom='mobile_index_results_cloud';setSync('جاري الحفظ...');return cloudRef.update(fields).then(()=>{setSync('تم الحفظ');toast('تم الحفظ بالسحابة')}).catch(e=>{setSync('فشل الحفظ');toast('خطأ حفظ: '+e.message)})}
-function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));if(!$(p))p='home';$(p).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));renderAll();window.scrollTo({top:0,behavior:'smooth'})}
-function orderTotal(o){return n(o.total)}function orderPaid(o){return n(o.paid)}function orderRemain(o){return n(o.remaining ?? o.remain ?? (orderTotal(o)-orderPaid(o)))}function orderDate(o){return o.date||o.createdAt||o.dateKey||''}
-function updateOrder(order){const orders=state.orders.map(o=>o.id===order.id?order:o);saveFields({orders})}
-function setOrderStatus(orderId,status){const o=state.orders.find(x=>x.id===orderId);if(!o)return;o.status=status;o.updatedAt=now();updateOrder(o)}
-function editOrder(orderId){editingOrderId=orderId;renderResultEdit();go('resultEdit')}
-function saveResultEdit(){const o=state.orders.find(x=>x.id===editingOrderId);if(!o)return toast('الطلب غير موجود');const items=(o.items||[]).map((it,i)=>({...it,result:($('r_'+i)?.value||'').trim(),note:($('rn_'+i)?.value||'').trim()}));o.items=items;o.resultNote=($('generalResultNote')?.value||'').trim();o.status=$('editStatus')?.value||o.status||'processing';o.updatedAt=now();updateOrder(o);go('results')}
-function deleteExpense(expId){if(!confirm('حذف المصروف؟'))return;saveFields({expenses:state.expenses.filter(x=>x.id!==expId)})}
-function addExpense(){const title=$('expTitle').value.trim(),amount=n($('expAmount').value);if(!title||!amount)return toast('اكتب البيان والمبلغ');const expenses=[{id:makeId(),title,amount,date:now(),shiftId:state.currentShift?.id||null,source:'mobile'},...state.expenses];$('expTitle').value='';$('expAmount').value='';saveFields({expenses})}
-function openShift(){if(state.currentShift)return toast('يوجد شفت مفتوح');const employee=$('shEmp').value.trim();if(!employee)return toast('اكتب اسم الموظف');const currentShift={id:makeId(),employee,shiftName:$('shName').value,openingCash:n($('shOpenCash').value),openedAt:now(),status:'open'};let employees=state.employees||[];if(employee&&!employees.find(e=>(e.name||e)===employee))employees=[...employees,{id:makeId(),name:employee}];saveFields({currentShift,employees})}
-function closeShift(){const sh=state.currentShift;if(!sh)return;const sum=shiftSummary(sh);const closed={...sh,closedAt:now(),status:'closed',ordersCount:sum.orders.length,totalPaid:sum.paid,totalExpenses:sum.expenses,totalNet:sum.net};const shiftHistory=[closed,...state.shiftHistory];saveFields({currentShift:null,shiftHistory})}
-function ordersToday(){const t=dateKey();return state.orders.filter(o=>dateKey(orderDate(o))===t||String(o.dateKey||'')===t)}
-function expensesToday(){const t=dateKey();return state.expenses.filter(e=>dateKey(e.date||e.createdAt)===t||String(e.dateKey||'')===t)}
-function sum(arr,fn){return arr.reduce((a,x)=>a+fn(x),0)}
-function shiftSummary(sh){const start=new Date(sh.openedAt).getTime(),end=sh.closedAt?new Date(sh.closedAt).getTime():Date.now();const orders=state.orders.filter(o=>{const t=new Date(orderDate(o)).getTime();return t>=start&&t<=end});const exps=state.expenses.filter(e=>{const t=new Date(e.date||e.createdAt).getTime();return t>=start&&t<=end});const paid=sum(orders,orderPaid),expenses=sum(exps,e=>n(e.amount)),net=n(sh.openingCash)+paid-expenses;return {orders,exps,paid,expenses,net}}
-function renderAll(){ $('todayText').textContent=dateKey();renderHome();renderPatients();renderResults();renderCash();renderShift();renderDatalists();if($('resultEdit').classList.contains('active'))renderResultEdit() }
-function orderCard(o){return `<div class="item"><div class="item-head"><div><b>${esc(o.patientName||'بدون اسم')}</b><div class="muted">${esc(o.orderNo||'')} • ${orderDate(o)?new Date(orderDate(o)).toLocaleString('ar-IQ'):esc(o.dateKey||'')}</div></div>${statusPill(o.status)}</div><div style="margin-top:8px" class="muted">${esc(o.testsText||(o.items||[]).map(i=>i.name).join('، ')||'لا توجد تحاليل')}</div><div class="actions" style="margin-top:10px"><span class="pill">المجموع ${money(orderTotal(o))}</span><span class="pill ok">مدفوع ${money(orderPaid(o))}</span><span class="pill warn">باقي ${money(orderRemain(o))}</span><button class="btn small primary" onclick="editOrder('${o.id}')">إدخال النتائج</button></div></div>`}
-function renderHome(){const ot=ordersToday(),ready=ot.filter(o=>o.status==='ready').length;$('stTodayOrders').textContent=ot.length;$('stReady').textContent=ready;$('stPaid').textContent=money(sum(ot,orderPaid));$('stRemain').textContent=money(sum(ot,orderRemain));const recent=state.orders.slice(0,6);$('recentCount').textContent=recent.length;$('recentOrders').innerHTML=recent.length?recent.map(orderCard).join(''):'<div class="empty">لا توجد طلبات بعد</div>'}
-function renderResults(){const f=$('resultFilter')?.value||'all';const q=($('resultSearch')?.value||'').trim().toLowerCase();let list=state.orders.filter(o=>{const text=[o.patientName,o.orderNo,o.testsText,(o.items||[]).map(i=>i.name).join(' ')].join(' ').toLowerCase();return (f==='all'||(o.status||'new')===f)&&(!q||text.includes(q))});$('resultsList').innerHTML=list.length?list.slice(0,120).map(orderCard).join(''):'<div class="empty">لا توجد نتائج</div>'}
-function renderResultEdit(){const o=state.orders.find(x=>x.id===editingOrderId);if(!o){$('resultEditBox').innerHTML='<div class="empty">اختر طلب من قسم النتائج</div>';return}const items=Array.isArray(o.items)?o.items:[];const rows=items.length?items.map((it,i)=>`<div class="result-input"><div><div class="test-name">${esc(it.name||('تحليل '+(i+1)))}</div><div class="tiny">Normal: ${esc(it.normalRange||'-')} ${it.unit?' • Unit: '+esc(it.unit):''}</div></div><div class="field"><label>النتيجة</label><input id="r_${i}" value="${esc(it.result||'')}" placeholder="اكتب النتيجة" /></div><div class="field"><label>ملاحظة</label><input id="rn_${i}" value="${esc(it.note||'')}" placeholder="اختياري" /></div></div>`).join(''):'<div class="empty">هذا الطلب ما بي تحاليل مفصلة، افتحه من النسخة الكاملة.</div>';$('resultEditBox').innerHTML=`<div class="card"><div class="item-head"><div><b>${esc(o.patientName||'بدون اسم')}</b><div class="muted">${esc(o.orderNo||'')} • ${orderDate(o)?new Date(orderDate(o)).toLocaleString('ar-IQ'):esc(o.dateKey||'')}</div></div>${statusPill(o.status)}</div><div class="quick-status"><select id="editStatus"><option value="new">بانتظار السحب</option><option value="drawn">تم السحب</option><option value="processing">قيد التحليل</option><option value="ready">جاهزة</option></select><button class="btn primary" onclick="saveResultEdit()">حفظ النتائج</button></div>${rows}<div class="field"><label>ملاحظة عامة للنتيجة</label><textarea id="generalResultNote" placeholder="ملاحظة عامة">${esc(o.resultNote||'')}</textarea></div><button class="btn primary" style="width:100%" onclick="saveResultEdit()">حفظ وتحديث النسخة الكاملة</button></div>`;const sel=$('editStatus');if(sel)sel.value=o.status||'processing'}
-function renderPatients(){const q=($('patientSearch')?.value||'').trim().toLowerCase();let list=state.patients.filter(p=>!q||String(p.name||'').toLowerCase().includes(q)||String(p.phone||'').includes(q));$('patientsTotal').textContent=list.length+' مريض';$('patientsList').innerHTML=list.length?list.slice(0,100).map(p=>{const os=state.orders.filter(o=>o.patientId===p.id||o.patientName===p.name);const debt=os.reduce((a,o)=>a+orderRemain(o),0);const last=os[0];return `<div class="item"><div class="item-head"><div><b>${esc(p.name)}</b><div class="muted">${esc(p.phone||'بدون رقم')} • ${esc(p.age||p.patientAge||'')} ${esc(p.gender||p.patientGender||'')}</div></div><span class="pill">${os.length} طلب</span></div><div class="actions" style="margin-top:10px"><span class="pill ${debt>0?'warn':'ok'}">باقي ${money(debt)}</span>${p.phone?`<button class="btn small ghost" onclick="window.open('https://wa.me/${cleanPhone(p.phone)}','_blank')">واتساب</button>`:''}${last?`<button class="btn small primary" onclick="editOrder('${last.id}')">آخر نتيجة</button>`:''}</div></div>`}).join(''):'<div class="empty">لا توجد نتائج بحث</div>'}
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.database();
+let uid=localStorage.getItem('lab_user_uid')||'',deviceId=localStorage.getItem('device_id')||'',cloudRef=null,editingOrderId=null,resultFilter='all';
+let state={lab:{},patients:[],orders:[],expenses:[],employees:[],shiftHistory:[],currentShift:null,tests:[],offers:[],doctors:[]};
+const $=id=>document.getElementById(id);const arr=x=>Array.isArray(x)?x:(x&&typeof x==='object'?Object.values(x):[]);const n=v=>Number(String(v??0).replace(/[^0-9.\-]/g,''))||0;const now=()=>new Date().toISOString();const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);const dateKey=d=>{let x=d?new Date(d):new Date();return isNaN(x)?new Date().toISOString().slice(0,10):x.toISOString().slice(0,10)};const money=v=>Math.round(n(v)).toLocaleString('en-US');
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.remove('show'),2200)}
+function normalizeCloud(v){v=v||{};return {...state,...v,lab:v.lab||{},patients:arr(v.patients),orders:arr(v.orders),expenses:arr(v.expenses),employees:arr(v.employees),shiftHistory:arr(v.shiftHistory),tests:arr(v.tests),offers:arr(v.offers),doctors:arr(v.doctors),currentShift:v.currentShift||null}}
+function block(msg){$('appRoot').classList.add('hide');$('blocked').classList.remove('hide');$('blockedMsg').textContent=msg||'يرجى تسجيل الدخول أولاً.'}
+function startApp(user){uid=user.uid;localStorage.setItem('lab_user_uid',uid);db.ref('users/'+uid).on('value',snap=>{const u=snap.val()||{};if(u.status&&u.status!=='active')return block('الاشتراك موقوف من لوحة الأدمن.');if(u.expiresAtMs&&u.expiresAtMs<Date.now())return block('انتهى الاشتراك.');if(deviceId&&u.activeDevices&&!u.activeDevices[deviceId])return block('هذا الجهاز غير مربوط. سجل دخول من صفحة التفعيل.');$('blocked').classList.add('hide');$('appRoot').classList.remove('hide');$('userLine').textContent=user.email||u.email||'';});
+cloudRef=db.ref('users/'+uid+'/cloudData');cloudRef.on('value',snap=>{state=normalizeCloud(snap.val());$('labTitle').textContent=state.lab?.name||state.lab?.labName||'LabFlow';$('syncState').textContent='آخر مزامنة الآن';renderAll();});}
+auth.onAuthStateChanged(user=>{if(!user){block('افتح صفحة الدخول وسجل أولاً.');return}startApp(user)});
+function saveFields(obj){if(!cloudRef)return toast('لا يوجد اتصال بالسحابة');$('syncState').textContent='جاري الحفظ...';cloudRef.update(obj).then(()=>{$('syncState').textContent='تم الحفظ'}).catch(e=>toast('خطأ حفظ: '+e.message));}
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.go===id||(id==='shift'&&b.dataset.go==='more')||(id==='resultEdit'&&b.dataset.go==='results')));window.scrollTo({top:0,behavior:'smooth'});if(id==='results')renderResults();if(id==='patients')renderPatients();if(id==='cash')renderCash();if(id==='shift')renderShift();}
+function setResultFilter(f){resultFilter=f;document.querySelectorAll('#resultChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===f));renderResults()}
+function orderDate(o){return o.date||o.createdAt||o.created||o.updatedAt||o.dateTime||o.time||o.dateKey||''}
+function orderTotal(o){return n(o.total||o.totalPrice||o.amount||o.price||o.finalTotal||o.grandTotal)}function orderPaid(o){return n(o.paid||o.paidAmount||o.received||o.pay)}function orderRemain(o){let r=o.remaining??o.remain??o.debt;return r!=null?n(r):Math.max(0,orderTotal(o)-orderPaid(o))}
+function orderTests(o){return o.testsText||(arr(o.items).map(i=>i.name||i.testName).filter(Boolean).join('، '))||(arr(o.tests).map(i=>i.name||i.testName||i).filter(Boolean).join('، '))||'لا توجد تحاليل'}
+function statusPill(s){s=s||'new';let map={new:['بانتظار السحب','warn'],drawn:['تم السحب',''],processing:['قيد التحليل',''],ready:['جاهزة','ok'],cancelled:['ملغي','danger']};let m=map[s]||[s,''];return `<span class="pill ${m[1]}">${m[0]}</span>`}
+function updateOrder(o){state.orders=state.orders.map(x=>x.id===o.id?o:x);saveFields({orders:state.orders})}
+function setOrderStatus(id,status){const o=state.orders.find(x=>x.id===id);if(!o)return;o.status=status;o.updatedAt=now();updateOrder(o)}
+function editOrder(id){editingOrderId=id;renderResultEdit();go('resultEdit')}
+function orderCard(o){return `<div class="item"><div class="item-head"><div><b>${esc(o.patientName||o.name||'بدون اسم')}</b><div class="tiny">${esc(o.orderNo||o.id||'')} • ${orderDate(o)?new Date(orderDate(o)).toLocaleString('ar-IQ'):''}</div></div>${statusPill(o.status)}</div><div class="muted" style="margin-top:9px;line-height:1.8">${esc(orderTests(o))}</div><div class="actions"><span class="pill">الإجمالي ${money(orderTotal(o))}</span><span class="pill ok">مدفوع ${money(orderPaid(o))}</span>${orderRemain(o)>0?`<span class="pill warn">باقي ${money(orderRemain(o))}</span>`:''}<button class="btn small primary" onclick="editOrder('${o.id}')">النتيجة</button><select class="status-select field-input" onchange="setOrderStatus('${o.id}',this.value)"><option value="new">بانتظار</option><option value="drawn">تم السحب</option><option value="processing">قيد التحليل</option><option value="ready">جاهزة</option></select></div></div>`}
+function renderAll(){$('todayText').textContent='• '+dateKey();renderHome();renderResults();renderPatients();renderCash();renderShift();renderDatalists();}
+function ordersToday(){const t=dateKey();return state.orders.filter(o=>dateKey(orderDate(o))===t||String(o.dateKey||'')===t)}function expensesToday(){const t=dateKey();return state.expenses.filter(e=>dateKey(e.date||e.createdAt)===t||String(e.dateKey||'')===t)}const sum=(a,fn)=>a.reduce((x,y)=>x+fn(y),0);
+function renderHome(){const ot=ordersToday(),ready=ot.filter(o=>(o.status||'')==='ready').length;$('heroToday').textContent=ot.length;$('stTodayOrders').textContent=ot.length;$('stReady').textContent=ready;$('stPaid').textContent=money(sum(ot,orderPaid));$('stRemain').textContent=money(sum(ot,orderRemain));const recent=state.orders.slice(0,8);$('recentCount').textContent=recent.length; $('recentOrders').innerHTML=recent.length?recent.map(orderCard).join(''):'<div class="empty">لا توجد طلبات بعد</div>';syncStatusSelects()}
+function syncStatusSelects(){setTimeout(()=>document.querySelectorAll('.status-select').forEach(sel=>{let id=sel.getAttribute('onchange')?.match(/'([^']+)'/)?.[1];let o=state.orders.find(x=>x.id===id);if(o)sel.value=o.status||'new'}),0)}
+function renderResults(){const q=($('resultSearch')?.value||'').trim().toLowerCase();let list=state.orders.filter(o=>{const text=[o.patientName,o.name,o.orderNo,o.id,orderTests(o)].join(' ').toLowerCase();return (resultFilter==='all'||(o.status||'new')===resultFilter)&&(!q||text.includes(q))});$('resultsList').innerHTML=list.length?list.slice(0,150).map(orderCard).join(''):'<div class="empty">لا توجد نتائج</div>';syncStatusSelects()}
+function renderResultEdit(){const o=state.orders.find(x=>x.id===editingOrderId);if(!o){$('resultEditBox').innerHTML='<div class="empty">اختر طلب من النتائج</div>';return}let items=arr(o.items).length?arr(o.items):arr(o.tests).map(x=>typeof x==='string'?{name:x}:x);let rows=items.length?items.map((it,i)=>`<div class="result-input"><div><div class="test-name">${esc(it.name||it.testName||('تحليل '+(i+1)))}</div><div class="tiny">Normal: ${esc(it.normalRange||it.range||'-')} ${it.unit?' • Unit: '+esc(it.unit):''}</div></div><div class="field"><label>النتيجة</label><input id="r_${i}" value="${esc(it.result||'')}" placeholder="اكتب النتيجة" /></div><div class="field"><label>ملاحظة</label><input id="rn_${i}" value="${esc(it.note||'')}" placeholder="اختياري" /></div></div>`).join(''):'<div class="empty">هذا الطلب ما بي تحاليل مفصلة، افتحه من النسخة الكاملة.</div>';$('resultEditBox').innerHTML=`<div class="card"><div class="item-head"><div><b>${esc(o.patientName||o.name||'بدون اسم')}</b><div class="tiny">${esc(o.orderNo||o.id||'')} • ${orderDate(o)?new Date(orderDate(o)).toLocaleString('ar-IQ'):''}</div></div>${statusPill(o.status)}</div><div class="field" style="margin-top:12px"><label>الحالة</label><select id="editStatus"><option value="new">بانتظار السحب</option><option value="drawn">تم السحب</option><option value="processing">قيد التحليل</option><option value="ready">جاهزة</option></select></div>${rows}<div class="field"><label>ملاحظة عامة</label><textarea id="generalResultNote">${esc(o.resultNote||'')}</textarea></div><button class="btn primary full-link" onclick="saveResultEdit()">حفظ وتحديث النسخة الكاملة</button></div>`;$('editStatus').value=o.status||'processing'}
+function saveResultEdit(){const o=state.orders.find(x=>x.id===editingOrderId);if(!o)return;let base=arr(o.items).length?arr(o.items):arr(o.tests).map(x=>typeof x==='string'?{name:x}:x);base=base.map((it,i)=>({...it,result:($('r_'+i)?.value||'').trim(),note:($('rn_'+i)?.value||'').trim()}));o.items=base;o.resultNote=($('generalResultNote')?.value||'').trim();o.status=$('editStatus')?.value||'processing';o.updatedAt=now();updateOrder(o);toast('تم حفظ النتيجة');go('results')}
+function renderPatients(){const q=($('patientSearch')?.value||'').trim().toLowerCase();let list=state.patients.filter(p=>!q||String(p.name||p.patientName||'').toLowerCase().includes(q)||String(p.phone||'').includes(q));$('patientsTotal').textContent=list.length+' مريض';$('patientsList').innerHTML=list.length?list.slice(0,120).map(p=>{const name=p.name||p.patientName||'بدون اسم';const os=state.orders.filter(o=>o.patientId===p.id||o.patientName===name||o.name===name);const debt=sum(os,orderRemain);const last=os[0];return `<div class="item"><div class="item-head"><div><b>${esc(name)}</b><div class="tiny">${esc(p.phone||'بدون رقم')} • ${esc(p.age||p.patientAge||'')} ${esc(p.gender||p.patientGender||'')}</div></div><span class="pill">${os.length} طلب</span></div><div class="actions"><span class="pill ${debt>0?'warn':'ok'}">باقي ${money(debt)}</span>${p.phone?`<button class="btn small ghost" onclick="window.open('https://wa.me/${cleanPhone(p.phone)}','_blank')">واتساب</button>`:''}${last?`<button class="btn small primary" onclick="editOrder('${last.id}')">آخر نتيجة</button>`:''}</div></div>`}).join(''):'<div class="empty">لا توجد نتائج بحث</div>'}
 function cleanPhone(p){let x=String(p||'').replace(/\D/g,'');if(x.startsWith('0'))x='964'+x.slice(1);if(!x.startsWith('964')&&x.length>8)x='964'+x;return x}
-function renderCash(){const ot=ordersToday(),ex=expensesToday(),total=sum(ot,orderTotal),paid=sum(ot,orderPaid),exp=sum(ex,e=>n(e.amount)),net=paid-exp;$('cashTotal').textContent=money(total);$('cashPaid').textContent=money(paid);$('cashExp').textContent=money(exp);$('cashNet').textContent=money(net);$('expensesList').innerHTML=ex.length?ex.map(e=>`<div class="item"><div class="item-head"><div><b>${esc(e.title)}</b><div class="muted">${new Date(e.date||e.createdAt).toLocaleTimeString('ar-IQ')}</div></div><span class="pill danger">${money(e.amount)}</span></div><div class="actions" style="margin-top:8px"><button class="btn small danger" onclick="deleteExpense('${e.id}')">حذف</button></div></div>`).join(''):'<div class="empty">لا توجد مصروفات اليوم</div>'}
-function renderShift(){const sh=state.currentShift;$('shiftState').textContent=sh?'مفتوح':'لا يوجد شفت';$('shiftState').className='pill '+(sh?'ok':'');$('openShiftBox').classList.toggle('hide',!!sh);$('currentShiftBox').classList.toggle('hide',!sh);if(sh){const s=shiftSummary(sh);$('currentShiftInfo').textContent=`${sh.employee} • ${sh.shiftName} • فتح: ${new Date(sh.openedAt).toLocaleString('ar-IQ')}`;$('shOrders').textContent=s.orders.length;$('shPaid').textContent=money(s.paid);$('shExp').textContent=money(s.expenses);$('shNet').textContent=money(s.net)}const hist=state.shiftHistory||[];$('shiftHistory').innerHTML=hist.length?hist.slice(0,30).map(h=>`<div class="item"><div class="item-head"><div><b>${esc(h.employee)} - ${esc(h.shiftName)}</b><div class="muted">${new Date(h.openedAt).toLocaleString('ar-IQ')} → ${h.closedAt?new Date(h.closedAt).toLocaleString('ar-IQ'):''}</div></div><span class="pill ok">${money(h.totalNet)}</span></div><div class="actions" style="margin-top:8px"><span class="pill">طلبات ${h.ordersCount||0}</span><span class="pill ok">مدفوع ${money(h.totalPaid)}</span><span class="pill danger">مصروف ${money(h.totalExpenses)}</span></div></div>`).join(''):'<div class="empty">لا توجد شفتات مغلقة</div>'}
-function renderDatalists(){const arr=(state.employees||[]).map(e=>e.name||e).filter(Boolean);$('employeesList').innerHTML=arr.map(x=>`<option value="${esc(x)}"></option>`).join('')}
+function renderCash(){const ot=ordersToday(),ex=expensesToday(),total=sum(ot,orderTotal),paid=sum(ot,orderPaid),exp=sum(ex,e=>n(e.amount)),net=paid-exp;$('cashTotal').textContent=money(total);$('cashPaid').textContent=money(paid);$('cashExp').textContent=money(exp);$('cashNet').textContent=money(net);$('expensesList').innerHTML=ex.length?ex.map(e=>`<div class="item"><div class="item-head"><div><b>${esc(e.title)}</b><div class="tiny">${new Date(e.date||e.createdAt).toLocaleTimeString('ar-IQ')}</div></div><span class="pill danger">${money(e.amount)}</span></div><div class="actions"><button class="btn small danger" onclick="deleteExpense('${e.id}')">حذف</button></div></div>`).join(''):'<div class="empty">لا توجد مصروفات اليوم</div>'}
+function addExpense(){const title=$('expTitle').value.trim(),amount=n($('expAmount').value);if(!title||!amount)return toast('اكتب البيان والمبلغ');state.expenses=[{id:makeId(),title,amount,date:now(),shiftId:state.currentShift?.id||null,source:'mobile'},...state.expenses];$('expTitle').value='';$('expAmount').value='';saveFields({expenses:state.expenses});renderCash()}
+function deleteExpense(id){if(!confirm('حذف المصروف؟'))return;state.expenses=state.expenses.filter(x=>x.id!==id);saveFields({expenses:state.expenses});renderCash()}
+function openShift(){if(state.currentShift)return toast('يوجد شفت مفتوح');const employee=$('shEmp').value.trim();if(!employee)return toast('اكتب اسم الموظف');state.currentShift={id:makeId(),employee,shiftName:$('shName').value,openingCash:n($('shOpenCash').value),openedAt:now(),status:'open'};if(!state.employees.find(e=>(e.name||e)===employee))state.employees=[...state.employees,{id:makeId(),name:employee}];saveFields({currentShift:state.currentShift,employees:state.employees});renderShift()}
+function shiftSummary(sh){const start=new Date(sh.openedAt).getTime(),end=sh.closedAt?new Date(sh.closedAt).getTime():Date.now();const orders=state.orders.filter(o=>{const t=new Date(orderDate(o)).getTime();return t>=start&&t<=end});const exps=state.expenses.filter(e=>{const t=new Date(e.date||e.createdAt).getTime();return t>=start&&t<=end});const paid=sum(orders,orderPaid),expenses=sum(exps,e=>n(e.amount)),net=n(sh.openingCash)+paid-expenses;return {orders,exps,paid,expenses,net}}
+function closeShift(){const sh=state.currentShift;if(!sh)return;const s=shiftSummary(sh);const closed={...sh,closedAt:now(),status:'closed',ordersCount:s.orders.length,totalPaid:s.paid,totalExpenses:s.expenses,totalNet:s.net};state.shiftHistory=[closed,...state.shiftHistory];state.currentShift=null;saveFields({currentShift:null,shiftHistory:state.shiftHistory});renderShift()}
+function renderShift(){const sh=state.currentShift;$('shiftState').textContent=sh?'مفتوح':'لا يوجد شفت';$('shiftState').className='pill '+(sh?'ok':'');$('openShiftBox').classList.toggle('hide',!!sh);$('currentShiftBox').classList.toggle('hide',!sh);if(sh){const s=shiftSummary(sh);$('currentShiftInfo').textContent=`${sh.employee} • ${sh.shiftName} • فتح: ${new Date(sh.openedAt).toLocaleString('ar-IQ')}`;$('shOrders').textContent=s.orders.length;$('shPaid').textContent=money(s.paid);$('shExp').textContent=money(s.expenses);$('shNet').textContent=money(s.net)}const h=state.shiftHistory||[];$('shiftHistory').innerHTML=h.length?h.slice(0,40).map(x=>`<div class="item"><div class="item-head"><div><b>${esc(x.employee)} - ${esc(x.shiftName)}</b><div class="tiny">${new Date(x.openedAt).toLocaleString('ar-IQ')} → ${x.closedAt?new Date(x.closedAt).toLocaleString('ar-IQ'):''}</div></div><span class="pill ok">${money(x.totalNet)}</span></div><div class="actions"><span class="pill">طلبات ${x.ordersCount||0}</span><span class="pill ok">مدفوع ${money(x.totalPaid)}</span><span class="pill danger">مصروف ${money(x.totalExpenses)}</span></div></div>`).join(''):'<div class="empty">لا توجد شفتات مغلقة</div>'}
+function renderDatalists(){const a=(state.employees||[]).map(e=>e.name||e).filter(Boolean);$('employeesList').innerHTML=a.map(x=>`<option value="${esc(x)}"></option>`).join('')}
 function logout(){auth.signOut().then(()=>{localStorage.removeItem('lab_user_uid');location.href='login.html'})}
 </script>
-
-<!-- LabFlow PWA install button -->
-<style>
-  #labflowInstallBtn{
-    position:fixed;left:16px;bottom:16px;z-index:999999;
-    border:0;border-radius:999px;padding:12px 16px;
-    background:linear-gradient(135deg,#19d184,#48b7ff);color:#03141d;
-    font-family:Tahoma,Arial,sans-serif;font-weight:900;box-shadow:0 14px 38px rgba(0,0,0,.22);
-    cursor:pointer;display:flex;align-items:center;gap:8px
-  }
-  #labflowInstallBtn.hidden{display:none!important}
-  @media(max-width:600px){#labflowInstallBtn{left:12px;right:12px;bottom:84px;justify-content:center}}
-</style>
-<button id="labflowInstallBtn" type="button">⬇ تثبيت LabFlow</button>
-<script>
-(function(){
-  let deferredPrompt = null;
-  const btn = document.getElementById('labflowInstallBtn');
-  if(!btn) return;
-
-  function isStandalone(){
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  }
-  if(isStandalone()) btn.classList.add('hidden');
-
-  if('serviceWorker' in navigator){
-    window.addEventListener('load', function(){
-      navigator.serviceWorker.register('./sw.js').catch(function(err){
-        console.warn('ServiceWorker registration failed:', err);
-      });
-    });
-  }
-
-  window.addEventListener('beforeinstallprompt', function(e){
-    e.preventDefault();
-    deferredPrompt = e;
-    if(!isStandalone()) btn.classList.remove('hidden');
-  });
-
-  btn.addEventListener('click', async function(){
-    if(isStandalone()) { btn.classList.add('hidden'); return; }
-    if(deferredPrompt){
-      deferredPrompt.prompt();
-      try { await deferredPrompt.userChoice; } catch(e) {}
-      deferredPrompt = null;
-      btn.classList.add('hidden');
-      return;
-    }
-    alert('إذا ما ظهرت نافذة التثبيت، افتح الموقع من Chrome أو Edge ثم من القائمة اختر Install app / تثبيت التطبيق. تأكد أن الموقع مرفوع على HTTPS مثل GitHub Pages.');
-  });
-
-  window.addEventListener('appinstalled', function(){ btn.classList.add('hidden'); });
-})();
-</script>
-
 </body>
 </html>
