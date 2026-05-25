@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -88,20 +89,21 @@
                     // إذا الجهاز مسجل مسبقاً يعبر مباشرة
                     if (activeDevices[currentDeviceId]) {
                         localStorage.setItem('lab_user_uid', uid);
-                        window.location.href = 'lab flow.html';
+                        window.location.href = './index.html';
                         return;
                     }
 
                     // إذا جهاز جديد، نفحص الحد الأقصى للأجهزة
-                    if (Object.keys(activeDevices).length >= userData.maxDevices) {
-                        errorMsg.innerText = `عذراً، تم تجاوز الحد الأقصى للأجهزة المسموحة (${userData.maxDevices}).`;
+                    const maxDevices = Number(userData.maxDevices || 1);
+                    if (Object.keys(activeDevices).length >= maxDevices) {
+                        errorMsg.innerText = `عذراً، تم تجاوز الحد الأقصى للأجهزة المسموحة (${maxDevices}).`;
                         auth.signOut();
                         btn.innerText = "تسجيل الدخول وربط الجهاز";
                     } else {
                         // تسجيل الجهاز بالفايربيس وتوجيه المستخدم للبرنامج
                         db.ref('users/' + uid + '/activeDevices/' + currentDeviceId).set(true).then(() => {
                             localStorage.setItem('lab_user_uid', uid);
-                            window.location.href = 'lab flow.html';
+                            window.location.href = './index.html';
                         });
                     }
                 });
