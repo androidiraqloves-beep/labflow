@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم الإدارية - LabFlow</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <style>
+        :root {
+            --bg: #060b13;
+            --panel: rgba(15, 25, 42, 0.75);
+            --border: rgba(38, 59, 93, 0.5);
+            --text: #eef6ff;
+            --brand: #19d184;
+            --brand-hover: #12a668;
+            --danger: #ff6578;
+            --gold: #ffd700;
+        }
+        
+        body {
+            font-family: Tahoma, sans-serif;
+            background: radial-gradient(circle at 50% 0%, #0d233a 0, var(--bg) 70%);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+        
+        h2, h3 { border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 25px; }
+        
+        .form-group { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        
+        input {
+            flex: 1; padding: 12px; background: #09111c; border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); min-width: 180px; outline: none;
+        }
+        input:focus { border-color: var(--brand); }
+        
+        button {
+            background: var(--brand); color: #03070e; border: none; padding: 12px 24px;
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background: var(--brand-hover); }
+        button.btn-danger { background: var(--danger); color: white; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid var(--border); padding: 14px; text-align: center; }
+        th { background: #09111c; color: var(--gold); }
+        
+        .code-box { font-family: monospace; color: var(--brand); font-size: 15px; font-weight: bold; }
+        .pass-box { font-family: monospace; color: var(--text); font-size: 15px; }
+        
+        .status-dot {
+            display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+            margin-left: 8px; vertical-align: middle;
+        }
+        .status-active { background: var(--brand); box-shadow: 0 0 10px var(--brand); }
+        .status-suspended { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+        
+        #adminPanel { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="loginSection" class="container" style="max-width: 400px; margin-top: 15vh;">
+        <h2 style="text-align: center;">تسجيل دخول الإدارة</h2>
+        <input type="email" id="adminEmail" placeholder="البريد الإلكتروني للإدارة" style="width: 100%; margin-bottom: 15px;">
+        <input type="password" id="adminPassword" placeholder="كلمة المرور" style="width: 100%; margin-bottom: 15px;">
+        <button onclick="loginAdmin()" style="width: 100%;">دخول نظام الإدارة</button>
+        <div id="loginError" style="color:var(--danger); text-align:center; margin-top:15px;"></div>
+    </div>
+
+    <div id="adminPanel" class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>لوحة التحكم بالاشتراكات وتراخيص الأجهزة</h2>
+            <button class="btn-danger" onclick="auth.signOut()">تسجيل الخروج</button>
+        </div>
+
+        <h3>تكوين حساب مستخدم جديد وتوليد الترخيص</h3>
+        <div class="form-group">
+            <input type="email" id="newUserEmail" placeholder="البريد الإلكتروني للمستخدم">
+            <input type="text" id="newUserPassword" placeholder="كلمة المرور الفريدة">
+            <input type="number" id="maxDevices" placeholder="عدد الأجهزة المسموحة" value="2" min="1" style="max-width: 120px;">
+            <button onclick="createAccount()">إنشاء الحساب وتوليد الكود</button>
+        </div>
+
+        <h3>قائمة الحسابات النشطة ومفاتيح التفعيل التابعة لها</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>البريد الإلكتروني للمستخدم</th>
+                    <th>كلمة المرور</th>
+                    <th>كود التفعيل المولد</th>
+                    <th>الحد الأقصى للأجهزة</th>
+                    <th>الحالة</th>
+                    <th>إجراءات الإدارة</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <tr><td colspan="6">جاري مزامنة البيانات مع سيرفر آسيا...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5MTJRDNILD3KalDIMmdOQxGFPsBgwOC8",
+            authDomain: "labflow-a8cdc.firebaseapp.com",
+            databaseURL: "https://labflow-a8cdc-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "labflow-a8cdc",
+            storageBucket: "labflow-a8cdc.firebasestorage.app",
+            messagingSenderId: "23108604166",
+            appId: "1:23108604166:web:d4888aa101507391e9ce87"
+        };
+
+        const mainApp = firebase.initializeApp(firebaseConfig);
+        const secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryApp");
+        const auth = mainApp.auth();
+        const db = mainApp.database();
+
+        auth.onAuthStateChanged((user) => {
+            if (user && user.email.toLowerCase() === 'mohmmed@admin.com') {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAccounts();
+            } else {
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+            }
+        });
+
+        function loginAdmin() {
+            auth.signInWithEmailAndPassword(document.getElementById('adminEmail').value, document.getElementById('adminPassword').value)
+            .catch(e => document.getElementById('loginError').innerText = "فشل التحقق: " + e.message);
+        }
+
+        function createAccount() {
+            const email = document.getElementById('newUserEmail').value.trim();
+            const password = document.getElementById('newUserPassword').value.trim();
+            const maxDev = parseInt(document.getElementById('maxDevices').value);
+
+            if (!email || !password) return alert("يرجى ملء جميع الحقول الخاصة بالحساب الجديد.");
+
+            secondaryApp.auth().createUserWithEmailAndPassword(email, password)
+            .then((credential) => {
+                const uid = credential.user.uid;
+                // توليد كود تفعيل تلقائي فريد للحساب
+                const activationCode = "LF-" + Math.random().toString(36).substr(2, 7).toUpperCase();
+
+                db.ref('users/' + uid).set({
+                    email: email,
+                    password: password,
+                    activationCode: activationCode,
+                    maxDevices: maxDev,
+                    status: "active",
+                    activeDevices: {}
+                }).then(() => {
+                    alert("تم إنشاء الحساب وتوليد كود التفعيل بنجاح.");
+                    document.getElementById('newUserEmail').value = "";
+                    document.getElementById('newUserPassword').value = "";
+                    secondaryApp.auth().signOut();
+                });
+            })
+            .catch(err => alert("خطأ أثناء تكوين الحساب: " + err.message));
+        }
+
+        function loadAccounts() {
+            db.ref('users').on('value', (snapshot) => {
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = "";
+                
+                if (!snapshot.exists()) {
+                    tbody.innerHTML = "<tr><td colspan='6'>لا توجد حسابات مسجلة حالياً.</td></tr>";
+                    return;
+                }
+
+                snapshot.forEach((child) => {
+                    const uid = child.key;
+                    const data = child.val();
+                    if (data.role === 'admin') return;
+
+                    const isActive = data.status === 'active';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${data.email}</td>
+                            <td class="pass-box">${data.password}</td>
+                            <td class="code-box">${data.activationCode || 'غير متوفر'}</td>
+                            <td>
+                                <input type="number" value="${data.maxDevices}" style="width:60px; text-align:center;" onchange="updateDevices('${uid}', this.value)">
+                            </td>
+                            <td>
+                                <span class="status-dot ${isActive ? 'status-active' : 'status-suspended'}"></span>
+                                ${isActive ? 'نشط' : 'موقوف'}
+                            </td>
+                            <td>
+                                <button onclick="toggleStatus('${uid}', '${data.status}')" style="width:90px; padding:6px;">${isActive ? 'إيقاف' : 'تفعيل'}</button>
+                                <button class="btn-danger" onclick="clearDevices('${uid}')" style="padding:6px;">تصفير الأجهزة</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        function toggleStatus(uid, status) { db.ref('users/' + uid + '/status').set(status === 'active' ? 'suspended' : 'active'); }
+        function updateDevices(uid, val) { if(val > 0) db.ref('users/' + uid + '/maxDevices').set(parseInt(val)); }
+        function clearDevices(uid) { if(confirm("هل تود مسح الأجهزة المرتبطة بهذا الترخيص؟")) db.ref('users/' + uid + '/activeDevices').remove(); }
+    </script>
+</body>
+</html>
