@@ -2,117 +2,252 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل دخول المختبر - LabFlow</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    
-    <style>
-        body { font-family: Tahoma, sans-serif; background: radial-gradient(circle at 15% 0%, #153c66 0, #07101d 40%, #03070e 100%); color: #eef6ff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: rgba(16, 29, 48, 0.88); border: 1px solid #263b5d; padding: 40px; border-radius: 18px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 18px 60px rgba(0,0,0,0.5); }
-        .login-box h2 { color: #19d184; margin-bottom: 25px; border-bottom: 1px solid #263b5d; padding-bottom: 15px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #263b5d; border-radius: 8px; background: #0b1728; color: #fff; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #19d184; }
-        button { width: 100%; padding: 12px; margin-top: 15px; background: #19d184; color: #03070e; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; }
-        button:hover { background: #12a668; }
-        #errorMsg { color: #ff6578; margin-top: 15px; font-size: 14px; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LabFlow Login</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Tahoma, Arial, sans-serif;
+      background: radial-gradient(circle at top, #123a5a 0, #07101d 42%, #02050a 100%);
+      color: #eef6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .box {
+      width: 100%;
+      max-width: 390px;
+      background: rgba(10, 22, 38, 0.92);
+      border: 1px solid rgba(166, 205, 245, 0.16);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: 0 28px 80px rgba(0,0,0,.48);
+      backdrop-filter: blur(12px);
+    }
+    .logo {
+      width: 62px;
+      height: 62px;
+      margin: 0 auto 18px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #19d184, #48b7ff);
+      color: #031b16;
+      font-size: 24px;
+      font-weight: 900;
+    }
+    input {
+      width: 100%;
+      height: 52px;
+      margin-bottom: 12px;
+      padding: 0 15px;
+      border: 1px solid rgba(166, 205, 245, 0.18);
+      border-radius: 15px;
+      background: #071322;
+      color: #eef6ff;
+      outline: none;
+      font-size: 15px;
+      text-align: center;
+    }
+    input:focus {
+      border-color: #19d184;
+      box-shadow: 0 0 0 4px rgba(25,209,132,.12);
+    }
+    #activationCode {
+      direction: ltr;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+    button {
+      width: 100%;
+      height: 52px;
+      border: 0;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #19d184, #91ffd0);
+      color: #031b16;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .65; cursor: not-allowed; }
+    #message {
+      display: none;
+      margin-top: 13px;
+      padding: 11px 12px;
+      border-radius: 13px;
+      line-height: 1.7;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+    #message.err {
+      display: block;
+      background: rgba(255,101,120,.12);
+      border: 1px solid rgba(255,101,120,.33);
+      color: #ffd4da;
+    }
+    #message.ok {
+      display: block;
+      background: rgba(25,209,132,.11);
+      border: 1px solid rgba(25,209,132,.28);
+      color: #d7ffe9;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <h2>تفعيل نظام LabFlow</h2>
-        <input type="email" id="email" placeholder="البريد الإلكتروني للمختبر">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button onclick="loginUser()" id="loginBtn">تسجيل الدخول وربط الجهاز</button>
-        <div id="errorMsg"></div>
-    </div>
+  <div class="box">
+    <div class="logo">LF</div>
 
-    <script>
-        // إعدادات الربط مع سيرفر آسيا الخاص بك
-        const firebaseConfig = {
-            apiKey: "AIzaSyB5MTJRDNILD3KalDIMmdOQxGFPsBgwOC8",
-            authDomain: "labflow-a8cdc.firebaseapp.com",
-            databaseURL: "https://labflow-a8cdc-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "labflow-a8cdc"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+    <input type="email" id="email" autocomplete="email" placeholder="البريد الإلكتروني" />
+    <input type="password" id="password" autocomplete="current-password" placeholder="كلمة المرور" />
+    <input type="text" id="activationCode" autocomplete="one-time-code" placeholder="كود التفعيل" />
 
-        // توليد معرّف (بصمة) فريد للجهاز
-        function getDeviceID() {
-            let did = localStorage.getItem('device_id');
-            if (!did) {
-                did = 'dev_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('device_id', did);
-            }
-            return did;
-        }
+    <button id="loginBtn" onclick="loginUser()">دخول</button>
+    <div id="message"></div>
+  </div>
 
-        function loginUser() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const btn = document.getElementById('loginBtn');
-            const errorMsg = document.getElementById('errorMsg');
-            
-            if (!email || !password) {
-                errorMsg.innerText = "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
-                return;
-            }
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB5MTJRDNILD3KalDIMmdOQxGFPsBgwOC8",
+    authDomain: "labflow-a8cdc.firebaseapp.com",
+    databaseURL: "https://labflow-a8cdc-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    projectId: "labflow-a8cdc",
+    storageBucket: "labflow-a8cdc.firebasestorage.app",
+    messagingSenderId: "23108604166",
+    appId: "1:23108604166:web:d4888aa101507391e9ce87"
+  };
 
-            btn.innerText = "جاري التحقق من التراخيص...";
-            errorMsg.innerText = "";
+  const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
 
-            auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                const uid = userCredential.user.uid;
-                const currentDeviceId = getDeviceID();
+  function normalizeCode(value) {
+    return String(value || '').trim().toUpperCase().replace(/\s+/g, '');
+  }
 
-                // فحص البيانات والقيود من قاعدة البيانات
-                db.ref('users/' + uid).once('value').then((snapshot) => {
-                    const userData = snapshot.val();
-                    
-                    if (!userData || userData.status === 'suspended') {
-                        errorMsg.innerText = "هذا الاشتراك موقوف أو غير مسجل في المنظومة.";
-                        auth.signOut();
-                        btn.innerText = "تسجيل الدخول وربط الجهاز";
-                        return;
-                    }
+  function getDeviceID() {
+    let did = localStorage.getItem('device_id');
+    if (!did) {
+      const rnd = (window.crypto && crypto.getRandomValues)
+        ? Array.from(crypto.getRandomValues(new Uint32Array(3))).map(x => x.toString(36)).join('')
+        : Math.random().toString(36).slice(2) + Date.now().toString(36);
+      did = 'dev_' + rnd.slice(0, 24);
+      localStorage.setItem('device_id', did);
+    }
+    return did;
+  }
 
-                    let activeDevices = userData.activeDevices || {};
-                    
-                    // إذا الجهاز مسجل مسبقاً يعبر مباشرة
-                    if (activeDevices[currentDeviceId]) {
-                        localStorage.setItem('lab_user_uid', uid);
-                        window.location.href = './index.html';
-                        return;
-                    }
+  function show(type, text) {
+    const m = document.getElementById('message');
+    m.className = type === 'ok' ? 'ok' : 'err';
+    m.innerText = text;
+  }
 
-                    // إذا جهاز جديد، نفحص الحد الأقصى للأجهزة
-                    const maxDevices = Number(userData.maxDevices || 1);
-                    if (Object.keys(activeDevices).length >= maxDevices) {
-                        errorMsg.innerText = `عذراً، تم تجاوز الحد الأقصى للأجهزة المسموحة (${maxDevices}).`;
-                        auth.signOut();
-                        btn.innerText = "تسجيل الدخول وربط الجهاز";
-                    } else {
-                        // تسجيل الجهاز بالفايربيس وتوجيه المستخدم للبرنامج
-                        db.ref('users/' + uid + '/activeDevices/' + currentDeviceId).set(true).then(() => {
-                            localStorage.setItem('lab_user_uid', uid);
-                            window.location.href = './index.html';
-                        });
-                    }
-                });
-            })
-            .catch((error) => {
-                btn.innerText = "تسجيل الدخول وربط الجهاز";
-                errorMsg.innerText = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-            });
-        }
-    </script>
+  function setBusy(on) {
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = !!on;
+    btn.innerText = on ? 'جاري التحقق...' : 'دخول';
+  }
+
+  function isExpired(data) {
+    return data && data.expiresAtMs && Number(data.expiresAtMs) < Date.now();
+  }
+
+  function devicePayload(code, email) {
+    return {
+      deviceId: getDeviceID(),
+      code: normalizeCode(code),
+      email: String(email || '').toLowerCase(),
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      firstSeen: firebase.database.ServerValue.TIMESTAMP,
+      lastSeen: firebase.database.ServerValue.TIMESTAMP,
+      userAgent: navigator.userAgent || 'unknown',
+      platform: navigator.platform || 'unknown'
+    };
+  }
+
+  async function loginUser() {
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value.trim();
+    const code = normalizeCode(document.getElementById('activationCode').value);
+    const deviceId = getDeviceID();
+
+    if (!email || !password || !code) {
+      show('err', 'أدخل البيانات الثلاثة.');
+      return;
+    }
+
+    setBusy(true);
+
+    try {
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      const credential = await auth.signInWithEmailAndPassword(email, password);
+      const uid = credential.user.uid;
+
+      const snap = await db.ref('users/' + uid).once('value');
+      const data = snap.val();
+
+      if (!data) throw new Error('الحساب غير موجود.');
+      if (data.status !== 'active') throw new Error('الاشتراك موقوف.');
+      if (isExpired(data)) throw new Error('انتهت مدة الاشتراك.');
+      if (normalizeCode(data.activationCode) !== code) throw new Error('كود التفعيل غير صحيح.');
+
+      const activeDevices = data.activeDevices || {};
+      const deviceExists = !!activeDevices[deviceId];
+      const maxDevices = Math.max(1, Number(data.maxDevices || 1));
+
+      if (!deviceExists && Object.keys(activeDevices).length >= maxDevices) {
+        throw new Error('تم تجاوز عدد الأجهزة المسموحة.');
+      }
+
+      const deviceRef = db.ref('users/' + uid + '/activeDevices/' + deviceId);
+      if (deviceExists) {
+        await deviceRef.update({
+          lastSeen: firebase.database.ServerValue.TIMESTAMP,
+          code: code,
+          email: email
+        });
+      } else {
+        await deviceRef.set(devicePayload(code, email));
+      }
+
+      await db.ref('users/' + uid).update({
+        lastLoginAt: firebase.database.ServerValue.TIMESTAMP,
+        lastLoginDevice: deviceId
+      });
+
+      localStorage.setItem('lab_user_uid', uid);
+      localStorage.setItem('lab_user_email', email);
+      localStorage.setItem('lab_activation_code', code);
+      localStorage.setItem('lab_session_at', String(Date.now()));
+
+      show('ok', 'تم الدخول بنجاح...');
+      setTimeout(() => { window.location.href = './index.html'; }, 400);
+    } catch (err) {
+      try { await auth.signOut(); } catch (e) {}
+      show('err', err && err.message ? err.message : 'فشل تسجيل الدخول.');
+      setBusy(false);
+    }
+  }
+
+  document.getElementById('activationCode').addEventListener('input', function(e) {
+    e.target.value = normalizeCode(e.target.value);
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') loginUser();
+  });
+</script>
 </body>
 </html>
