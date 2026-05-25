@@ -943,6 +943,190 @@ document.addEventListener('click',function(e){const m=document.getElementById('r
   try{refreshPrintList();relabel();}catch(e){console.error(PATCH,e)}
 })();
 
+
+
+/* ===== LabFlow Cloud Data Sync V60: per-account Firebase data ===== */
+(function(){
+  if(window.__LABFLOW_CLOUD_SYNC_V60__) return;
+  window.__LABFLOW_CLOUD_SYNC_V60__ = true;
+
+  const CLOUD_UID = localStorage.getItem('lab_user_uid') || '';
+  const MAIN_CACHE_KEY = 'labflow_cloud_cache_' + CLOUD_UID;
+  const MIGRATION_KEY = 'labflow_cloud_migrated_' + CLOUD_UID;
+  const DOCTORS_LOCAL_KEY = 'labflow_saved_doctors_integrated_v1';
+  const DOCTORS_CACHE_KEY = 'labflow_cloud_doctors_' + CLOUD_UID;
+  let cloudReady = false;
+  let cloudStarted = false;
+  let applyingCloud = false;
+  let uploadTimer = null;
+  let legacyBeforeCloud = null;
+  let ref = null;
+  let lastAppliedStamp = 0;
+
+  function safeParse(txt, fallback){
+    try{return txt ? JSON.parse(txt) : fallback;}catch(e){return fallback;}
+  }
+  function cloneClean(obj){
+    return safeParse(JSON.stringify(obj || {}), {});
+  }
+  function hasUsefulData(d){
+    return !!(d && ((Array.isArray(d.patients)&&d.patients.length) || (Array.isArray(d.orders)&&d.orders.length) || (Array.isArray(d.tests)&&d.tests.length) || (d.lab && Object.keys(d.lab).length)));
+  }
+  function readMainLocal(){ return safeParse(localStorage.getItem(KEY), {}); }
+  function writeMainLocal(data){ localStorage.setItem(KEY, JSON.stringify(data || {})); }
+  function readDoctorsLocal(){ return safeParse(localStorage.getItem(DOCTORS_LOCAL_KEY), []); }
+  function writeDoctorsLocal(data){ localStorage.setItem(DOCTORS_LOCAL_KEY, JSON.stringify(Array.isArray(data)?data:[])); }
+  function setCloudBadge(text, ok){
+    try{
+      const el = document.getElementById('subInfo');
+      if(el) el.textContent = text || (ok ? 'البيانات محفوظة سحابياً' : 'جاري مزامنة البيانات');
+    }catch(e){}
+  }
+  function getCloudRef(){
+    if(!CLOUD_UID || !window.firebase || !firebase.database) return null;
+    try{return firebase.database().ref('users/' + CLOUD_UID + '/cloudData');}catch(e){return null;}
+  }
+  function buildPayload(){
+    const d = readMainLocal();
+    d.lab = typeof lab !== 'undefined' ? lab : (d.lab || {});
+    d.patients = typeof patients !== 'undefined' ? patients : (d.patients || []);
+    d.tests = typeof tests !== 'undefined' ? tests : (d.tests || []);
+    d.orders = typeof orders !== 'undefined' ? orders : (d.orders || []);
+    d.offers = typeof offers !== 'undefined' ? offers : (d.offers || []);
+    if(typeof inventory !== 'undefined') d.inventory = inventory;
+    if(typeof expenses !== 'undefined') d.expenses = expenses;
+    if(typeof doctorRates !== 'undefined') d.doctorRates = doctorRates;
+    if(typeof employees !== 'undefined') d.employees = employees;
+    if(typeof shiftHistory !== 'undefined') d.shiftHistory = shiftHistory;
+    if(typeof currentShift !== 'undefined') d.currentShift = currentShift;
+    if(typeof qcEntries !== 'undefined') d.qcEntries = qcEntries;
+    d.savedDoctors = readDoctorsLocal();
+    d.ownerUid = CLOUD_UID;
+    d.cloudVersion = 'v60-per-account';
+    d.updatedAt = (typeof nowIso === 'function') ? nowIso() : new Date().toISOString();
+    d.updatedAtClientMs = Date.now();
+    return cloneClean(d);
+  }
+  function cacheLocal(data){
+    try{ localStorage.setItem(MAIN_CACHE_KEY, JSON.stringify(data || {})); }catch(e){}
+    try{ if(data && Array.isArray(data.savedDoctors)) localStorage.setItem(DOCTORS_CACHE_KEY, JSON.stringify(data.savedDoctors)); }catch(e){}
+  }
+  function prepareAccountLocal(){
+    if(!CLOUD_UID) return;
+    if(localStorage.getItem('__labflow_prepared_cloud_' + CLOUD_UID) === '1') return;
+    localStorage.setItem('__labflow_prepared_cloud_' + CLOUD_UID, '1');
+    const cached = localStorage.getItem(MAIN_CACHE_KEY);
+    const cachedDocs = localStorage.getItem(DOCTORS_CACHE_KEY);
+    legacyBeforeCloud = localStorage.getItem(KEY);
+    if(cached){
+      localStorage.setItem(KEY, cached);
+      if(cachedDocs) localStorage.setItem(DOCTORS_LOCAL_KEY, cachedDocs);
+    }else{
+      // لا نعرض بيانات حساب سابق من نفس المتصفح قبل وصول بيانات الحساب الحالي من Firebase
+      try{ localStorage.removeItem(KEY); }catch(e){}
+    }
+  }
+  function applyCloudData(data){
+    if(!data || typeof data !== 'object') return;
+    applyingCloud = true;
+    try{
+      const clean = cloneClean(data);
+      if(Array.isArray(clean.savedDoctors)) writeDoctorsLocal(clean.savedDoctors);
+      writeMainLocal(clean);
+      cacheLocal(clean);
+      if(typeof oldLoadCloudV60 === 'function') oldLoadCloudV60();
+      else if(typeof load === 'function') load();
+      try{ if(typeof applyTheme === 'function') applyTheme(); }catch(e){}
+      try{ if(typeof updateAppLogo === 'function') updateAppLogo(); }catch(e){}
+      try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
+      setCloudBadge('البيانات محفوظة سحابياً', true);
+    }catch(e){ console.error('Cloud apply failed', e); }
+    finally{ applyingCloud = false; }
+  }
+  function uploadNow(){
+    if(applyingCloud || !cloudReady) return;
+    ref = ref || getCloudRef();
+    if(!ref) return;
+    const payload = buildPayload();
+    cacheLocal(payload);
+    payload.updatedAtServer = firebase.database.ServerValue.TIMESTAMP;
+    setCloudBadge('جاري حفظ البيانات سحابياً...', false);
+    ref.set(payload).then(function(){
+      setCloudBadge('البيانات محفوظة سحابياً', true);
+      try{ localStorage.setItem(MIGRATION_KEY, '1'); }catch(e){}
+    }).catch(function(err){
+      console.error('Cloud save failed', err);
+      setCloudBadge('تعذر الحفظ السحابي - تحقق من Rules', false);
+      try{ if(typeof msg === 'function') msg('err', 'تعذر الحفظ السحابي: ' + (err && err.message ? err.message : err)); }catch(e){}
+    });
+  }
+  function scheduleUpload(){
+    if(applyingCloud || !cloudReady) return;
+    clearTimeout(uploadTimer);
+    uploadTimer = setTimeout(uploadNow, 650);
+  }
+
+  const oldSaveCloudV60 = save;
+  const oldLoadCloudV60 = load;
+  window.oldLoadCloudV60 = oldLoadCloudV60;
+
+  save = function(){
+    try{ oldSaveCloudV60(); }catch(e){ console.error(e); }
+    try{ cacheLocal(buildPayload()); }catch(e){}
+    scheduleUpload();
+  };
+
+  load = function(){
+    prepareAccountLocal();
+    try{ window.oldLoadCloudV60(); }catch(e){ console.error(e); }
+    startCloudSync();
+  };
+
+  function startCloudSync(){
+    if(cloudStarted || !CLOUD_UID) return;
+    cloudStarted = true;
+    ref = getCloudRef();
+    if(!ref){ setCloudBadge('Firebase غير متصل', false); return; }
+    setCloudBadge('جاري تحميل بيانات الحساب...', false);
+
+    ref.once('value').then(function(snapshot){
+      cloudReady = true;
+      const data = snapshot.val();
+      if(data && hasUsefulData(data)){
+        lastAppliedStamp = Number(data.updatedAtClientMs || 0);
+        applyCloudData(data);
+      }else{
+        const legacy = safeParse(legacyBeforeCloud, null);
+        if(legacy && hasUsefulData(legacy) && localStorage.getItem(MIGRATION_KEY) !== '1'){
+          writeMainLocal(legacy);
+          try{ window.oldLoadCloudV60(); }catch(e){}
+          try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
+        }
+        uploadNow();
+      }
+      ref.on('value', function(snap){
+        if(applyingCloud) return;
+        const fresh = snap.val();
+        if(!fresh || !hasUsefulData(fresh)) return;
+        const stamp = Number(fresh.updatedAtClientMs || 0);
+        if(stamp && stamp === lastAppliedStamp) return;
+        lastAppliedStamp = stamp;
+        applyCloudData(fresh);
+      }, function(err){
+        console.error('Cloud listener failed', err);
+        setCloudBadge('فشل اتصال السحابة', false);
+      });
+    }).catch(function(err){
+      console.error('Cloud initial load failed', err);
+      setCloudBadge('لا توجد صلاحية لحفظ بيانات السحابة', false);
+      try{ if(typeof msg === 'function') msg('err', 'صلاحيات Firebase لا تسمح بتحميل/حفظ بيانات الحساب. حدث Rules.'); }catch(e){}
+    });
+  }
+
+  window.LabFlowCloudSync = { uploadNow: uploadNow, start: startCloudSync, path: function(){return 'users/' + CLOUD_UID + '/cloudData';} };
+})();
+/* ===== End LabFlow Cloud Data Sync V60 ===== */
+
 try{setTemplate(selectedTemplate||'classic')}catch(e){console.error(e)};try{loadAll()}catch(e){console.error(e)};
 
 
