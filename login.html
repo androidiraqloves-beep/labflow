@@ -222,10 +222,8 @@
         await deviceRef.set(devicePayload(code, email));
       }
 
-      await db.ref('users/' + uid).update({
-        lastLoginAt: firebase.database.ServerValue.TIMESTAMP,
-        lastLoginDevice: deviceId
-      });
+      // لا نكتب على users/uid مباشرة حتى لا تمنعها قواعد Firebase.
+      // آخر ظهور محفوظ داخل activeDevices/deviceId.
 
       localStorage.setItem('lab_user_uid', uid);
       localStorage.setItem('lab_user_email', email);
