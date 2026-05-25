@@ -12,147 +12,96 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
-/* إعدادات الثيم الداكن وألوان النيون */
 :root {
-  --bg: #010409; 
-  --surface: #0d1117; 
-  --surface2: #161b22; 
-  --ink: #e6edf3; 
-  --muted: #8b949e;
-  --brand: #10c8a6; /* أخضر نيون */
-  --brand2: #059669; /* أخضر داكن */
-  --dark: #000000; 
-  --dark2: #090b0f; 
-  --line: #30363d;
-  --danger: #f85149; 
-  --warn: #d29922; /* ذهبي */
-  --blue: #58a6ff; 
-  --ok: #238636;
-  --shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
-  --navh: 82px; 
-  --radius: 24px;
+  --bg: #010409; --surface: #0d1117; --surface2: #161b22; --ink: #e6edf3; --muted: #8b949e;
+  --brand: #10c8a6; --brand2: #059669; --dark: #000000; --dark2: #090b0f; --line: #30363d;
+  --danger: #f85149; --warn: #d29922; --blue: #58a6ff; --ok: #238636;
+  --shadow: 0 14px 34px rgba(0, 0, 0, 0.4); --navh: 82px; --radius: 24px;
 }
 
-/* خصائص تطبيق الموبايل الأصلي (Native Feel) */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none; /* منع تحديد النصوص */
-  user-select: none;
-  scrollbar-width: none; /* إخفاء شريط التمرير */
+  -webkit-user-select: none; user-select: none;
+  scrollbar-width: none;
 }
 *::-webkit-scrollbar { display: none; }
-input, select, textarea {
-  -webkit-user-select: auto; /* السماح بالكتابة في الحقول */
-  user-select: auto;
-}
+input, select, textarea { -webkit-user-select: auto; user-select: auto; }
 
 html, body {
-  margin: 0;
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--ink);
+  margin: 0; min-height: 100%;
+  background: var(--bg); color: var(--ink);
   font-family: Tahoma, Arial, "Segoe UI", sans-serif;
-  overscroll-behavior-y: none; /* منع السحب للخارج (Bounce effect) */
+  overscroll-behavior-y: none;
 }
-
-body {
-  overflow-x: hidden;
-  padding-bottom: calc(var(--navh) + env(safe-area-inset-bottom));
-  font-size: 15px;
-}
-
+body { overflow-x: hidden; padding-bottom: calc(var(--navh) + env(safe-area-inset-bottom)); font-size: 15px; }
 button, input, select, textarea { font: inherit; }
 button { border: 0; cursor: pointer; }
 .hide { display: none !important; }
 .muted { color: var(--muted); }
 .tiny { font-size: 12px; color: var(--muted); line-height: 1.8; }
-
-.appShell {
-  min-height: 100dvh;
-  background: var(--bg);
-}
+.appShell { min-height: 100dvh; background: var(--bg); }
 
 .statusbar { height: env(safe-area-inset-top); background: var(--dark); }
 
-/* الهيدر بتأثير Glassmorphism */
 .top {
   background: rgba(13, 17, 23, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #fff;
-  padding: 16px 16px 24px;
-  border-bottom-left-radius: 34px;
-  border-bottom-right-radius: 34px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: #fff; padding: 16px 16px 24px;
+  border-bottom-left-radius: 34px; border-bottom-right-radius: 34px;
   border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  z-index: 40;
+  position: relative; overflow: hidden;
 }
-
 .topInner { position: relative; z-index: 1; }
 .brandRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .brandRight { display: flex; align-items: center; gap: 12px; }
 
-/* شعار دائري مع تأثير نيون */
 .logo {
-  width: 54px; height: 54px;
-  border-radius: 50%; /* حواف دائرية كما تفضل */
+  width: 54px; height: 54px; border-radius: 50%;
   background: linear-gradient(135deg, var(--brand), var(--brand2));
   display: grid; place-items: center;
   color: #000; font-weight: 1000; font-size: 20px;
   box-shadow: 0 0 15px rgba(16, 200, 166, 0.4);
 }
-
 .brand h1 { margin: 0; font-size: 19px; line-height: 1.25; color: var(--ink); }
 .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
 
 .sync {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line);
-  border-radius: 999px; padding: 8px 10px; font-size: 11px; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 10px; font-size: 11px; color: var(--muted);
 }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 8px var(--brand); }
 
 .hero { margin-top: 20px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 12px; }
-.heroCard {
-  background: rgba(22, 27, 34, 0.6);
-  border: 1px solid var(--line);
-  border-radius: 24px; padding: 15px;
-}
+.heroCard { background: rgba(22, 27, 34, 0.6); border: 1px solid var(--line); border-radius: 24px; padding: 15px; }
 .heroCard span { display: block; color: var(--muted); font-size: 12px; }
 .heroCard b { display: block; margin-top: 5px; font-size: 26px; color: var(--ink); }
 
 .quickStatus { display: grid; gap: 8px; }
 .miniStatus {
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(22, 27, 34, 0.6);
-  border: 1px solid var(--line);
+  background: rgba(22, 27, 34, 0.6); border: 1px solid var(--line);
   border-radius: 16px; padding: 10px; font-size: 12px;
 }
 .miniStatus b { font-size: 15px; color: var(--ink); }
 
 .wrap { padding: 15px 14px 0; }
-.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: -22px; position: relative; z-index: 5; }
 .stat {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 24px; padding: 15px;
-  min-height: 92px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 24px; padding: 15px; box-shadow: var(--shadow); min-height: 92px;
 }
 .stat span { display: block; color: var(--muted); font-size: 12px; font-weight: 900; }
 .stat b { display: block; margin-top: 8px; font-size: 24px; color: var(--ink); }
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 15px; margin: 12px 0;
-  box-shadow: var(--shadow);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 15px; margin: 12px 0; box-shadow: var(--shadow);
 }
 .head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 13px; }
-.head h2 { margin: 0; font-size: 18px; color: var(--ink); }
+.head h2 { margin: 0; font-size: 20px; color: var(--ink); }
 
 .btn {
   border-radius: 17px; padding: 12px 14px; font-weight: 1000;
@@ -174,34 +123,28 @@ button { border: 0; cursor: pointer; }
 .page.active { display: block; }
 @keyframes fade { from { opacity: .55; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-.search { position: sticky; top: 0; z-index: 10; background: var(--bg); padding: 8px 0 12px; }
+.search { position: sticky; top: 0; z-index: 10; background: linear-gradient(180deg, var(--bg) 74%, transparent); padding: 8px 0 12px; }
 .field { margin-bottom: 10px; }
 .field label { display: block; margin: 0 0 7px; color: var(--muted); font-size: 12px; font-weight: 1000; }
 .field input, .field select, .field textarea {
   width: 100%; border: 1px solid var(--line);
   background: var(--surface); color: var(--ink);
-  border-radius: 18px; padding: 14px; outline: 0;
-  box-shadow: none;
+  border-radius: 18px; padding: 14px; outline: 0; box-shadow: none;
 }
-.field input:focus, .field select:focus, .field textarea:focus {
-    border-color: var(--brand);
-}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--brand); }
 .field textarea { min-height: 90px; resize: vertical; }
 
 .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scroll-behavior: smooth; }
 .chip {
-  white-space: nowrap; border-radius: 999px;
-  background: var(--surface2); border: 1px solid var(--line);
-  padding: 10px 13px; font-size: 12px; font-weight: 1000; color: var(--muted);
+  white-space: nowrap; border-radius: 999px; background: var(--surface2);
+  border: 1px solid var(--line); padding: 10px 13px; font-size: 12px; font-weight: 1000; color: var(--muted);
 }
 .chip.active { background: rgba(16, 200, 166, 0.15); border-color: var(--brand); color: var(--brand); }
 
 .list { display: flex; flex-direction: column; gap: 12px; }
 .item {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 25px; padding: 14px;
-  position: relative; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 25px; padding: 14px; position: relative; overflow: hidden;
 }
 .item.ready:before { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--ok); }
 .item.processing:before { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--blue); }
@@ -210,16 +153,14 @@ button { border: 0; cursor: pointer; }
 .itemTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .item b { font-size: 17px; color: var(--ink); }
 .testLine {
-  margin-top: 9px; background: var(--surface2);
-  border: 1px solid var(--line); border-radius: 16px;
-  padding: 9px; color: var(--muted); font-size: 13px; line-height: 1.7;
+  margin-top: 9px; background: var(--surface2); border: 1px solid var(--line);
+  border-radius: 16px; padding: 9px; color: var(--muted); font-size: 13px; line-height: 1.7;
 }
 
 .pill {
   display: inline-flex; align-items: center; gap: 5px;
-  border-radius: 999px; padding: 7px 10px;
-  background: var(--surface2); color: var(--muted);
-  font-size: 11px; font-weight: 1000; white-space: nowrap;
+  border-radius: 999px; padding: 7px 10px; background: var(--surface2);
+  color: var(--muted); font-size: 11px; font-weight: 1000; white-space: nowrap;
 }
 .pill.ok { background: rgba(35, 134, 54, 0.15); color: var(--ok); }
 .pill.warn { background: rgba(210, 153, 34, 0.15); color: var(--warn); }
@@ -228,27 +169,21 @@ button { border: 0; cursor: pointer; }
 
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
 .actions select {
-  width: 100%; border: 1px solid var(--line);
-  background: var(--surface2); color: var(--ink);
-  border-radius: 14px; padding: 10px; font-weight: 900;
+  width: 100%; border: 1px solid var(--line); background: var(--surface2);
+  color: var(--ink); border-radius: 14px; padding: 10px; font-weight: 900;
 }
 .moneyRow { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
 .empty { text-align: center; color: var(--muted); padding: 28px 8px; }
 
-/* شريط التنقل السفلي - تأثير زجاجي مع توافق للـ Safe Area */
 .nav {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
   background: rgba(13, 17, 23, 0.85);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: grid; grid-template-columns: repeat(5, 1fr);
-  padding: 8px 7px calc(8px + env(safe-area-inset-bottom));
+  padding: 8px 7px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -14px 28px rgba(0,0,0,.4);
 }
-.nav button {
-  background: transparent; color: var(--muted);
-  border-radius: 18px; padding: 8px 2px;
-  font-size: 10px; font-weight: 1000;
-}
+.nav button { background: transparent; color: var(--muted); border-radius: 18px; padding: 8px 2px; font-size: 10px; font-weight: 1000; }
 .nav span { display: block; font-size: 22px; line-height: 1; margin-bottom: 4px; filter: grayscale(1); }
 .nav button.active { background: rgba(16, 200, 166, 0.1); color: var(--brand); }
 .nav button.active span { filter: grayscale(0); }
@@ -262,7 +197,6 @@ button { border: 0; cursor: pointer; }
 
 .screen { min-height: 100dvh; display: grid; place-items: center; padding: 22px; background: var(--bg); }
 .screen .card { width: 100%; max-width: 430px; }
-
 .loader {
   width: 42px; height: 42px; border-radius: 50%;
   border: 4px solid var(--line); border-top-color: var(--brand);
@@ -270,41 +204,21 @@ button { border: 0; cursor: pointer; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* النوافذ المنبثقة (Bottom Sheet Modal) للـ Native */
-.modal {
-  position: fixed; inset: 0; z-index: 80;
-  background: rgba(0, 0, 0, 0.7);
-  display: none; align-items: flex-end;
-}
+.modal { position: fixed; inset: 0; z-index: 80; background: rgba(0, 0, 0, 0.7); display: none; align-items: flex-end; }
 .modal.show { display: flex; animation: fade .2s ease; }
 .sheet {
-  background: var(--bg); width: 100%;
-  border-radius: 28px 28px 0 0; padding: 16px calc(16px + env(safe-area-inset-bottom));
-  box-shadow: 0 -24px 50px rgba(0,0,0,.4);
-  max-height: 86dvh; overflow-y: auto; overscroll-behavior-y: contain;
-  border-top: 1px solid var(--line);
+  background: var(--bg); width: 100%; border-radius: 28px 28px 0 0;
+  padding: 16px calc(16px + env(safe-area-inset-bottom)); box-shadow: 0 -24px 50px rgba(0,0,0,.4);
+  max-height: 86dvh; overflow-y: auto; overscroll-behavior-y: contain; border-top: 1px solid var(--line);
 }
 .sheetGrip { width: 44px; height: 5px; background: var(--line); border-radius: 999px; margin: 0 auto 14px; }
-
 .resultRows { display: grid; gap: 10px; }
 .resultLine { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 12px; }
 .resultLine b { display: block; margin-bottom: 8px; color: var(--ink); }
 .resultLine input { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-top: 6px; }
-.shareHint {
-  background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3);
-  color: var(--ok); border-radius: 18px; padding: 12px; margin-top: 10px;
-  font-size: 12px; line-height: 1.8;
-}
+.shareHint { background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); color: var(--ok); border-radius: 18px; padding: 12px; margin-top: 10px; font-size: 12px; line-height: 1.8; }
 
-/* محاكاة شاشة الموبايل في المتصفحات الكبيرة */
-@media(min-width: 600px) {
-  body { display: grid; place-items: center; background: #000; }
-  .appShell { width: 100%; max-width: 430px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); position: relative; }
-  .nav { max-width: 430px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
-  .modal { justify-content: center; align-items: center; }
-  .sheet { max-width: 430px; border-radius: 28px; border: 1px solid var(--line); max-height: 90vh; }
-  .top { border-radius: 0 0 34px 34px; position: relative; }
-}
+@media(min-width:720px){.topInner,.wrap{max-width:720px;margin:auto}.stats{grid-template-columns:repeat(4,1fr)}.top{border-radius:0 0 36px 36px}.actions{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
