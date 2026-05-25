@@ -2,6 +2,14 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <!-- LabFlow PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#19d184">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="LabFlow">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LabFlow Login</title>
@@ -247,5 +255,60 @@
     if (e.key === 'Enter') loginUser();
   });
 </script>
+
+<!-- LabFlow PWA install button -->
+<style>
+  #labflowInstallBtn{
+    position:fixed;left:16px;bottom:16px;z-index:999999;
+    border:0;border-radius:999px;padding:12px 16px;
+    background:linear-gradient(135deg,#19d184,#48b7ff);color:#03141d;
+    font-family:Tahoma,Arial,sans-serif;font-weight:900;box-shadow:0 14px 38px rgba(0,0,0,.22);
+    cursor:pointer;display:flex;align-items:center;gap:8px
+  }
+  #labflowInstallBtn.hidden{display:none!important}
+  @media(max-width:600px){#labflowInstallBtn{left:12px;right:12px;bottom:84px;justify-content:center}}
+</style>
+<button id="labflowInstallBtn" type="button">⬇ تثبيت LabFlow</button>
+<script>
+(function(){
+  let deferredPrompt = null;
+  const btn = document.getElementById('labflowInstallBtn');
+  if(!btn) return;
+
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+  if(isStandalone()) btn.classList.add('hidden');
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./sw.js').catch(function(err){
+        console.warn('ServiceWorker registration failed:', err);
+      });
+    });
+  }
+
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    if(!isStandalone()) btn.classList.remove('hidden');
+  });
+
+  btn.addEventListener('click', async function(){
+    if(isStandalone()) { btn.classList.add('hidden'); return; }
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch(e) {}
+      deferredPrompt = null;
+      btn.classList.add('hidden');
+      return;
+    }
+    alert('إذا ما ظهرت نافذة التثبيت، افتح الموقع من Chrome أو Edge ثم من القائمة اختر Install app / تثبيت التطبيق. تأكد أن الموقع مرفوع على HTTPS مثل GitHub Pages.');
+  });
+
+  window.addEventListener('appinstalled', function(){ btn.classList.add('hidden'); });
+})();
+</script>
+
 </body>
 </html>
