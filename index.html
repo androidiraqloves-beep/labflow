@@ -2720,5 +2720,87 @@ try{document.documentElement.dataset.labflowBuild='V47_DEEP_CLEAN_PRESERVE';}cat
   startWhenAuthReady();
 })();
 /* ===== End LabFlow Cloud Sync Stable ===== */
+
+/* ===== LabFlow requested patch: red high/low result + السيد before patient name ===== */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    .result-row-v25.flag-high input[name="result"],
+    .result-row-v25.flag-low input[name="result"],
+    .result-row-v21.flag-high input[name="result"],
+    .result-row-v21.flag-low input[name="result"]{
+      color:#dc2626!important;
+      font-weight:1000!important;
+      border-color:#fecdd3!important;
+      background:#fff7f7!important;
+      box-shadow:0 0 0 4px rgba(220,38,38,.08)!important;
+    }
+    .result-row-v25.flag-high .result-test-title-v21 b,
+    .result-row-v25.flag-low .result-test-title-v21 b{
+      color:#b91c1c!important;
+    }
+    .lf-abnormal-red{color:#dc2626!important;font-weight:1000!important;}
+  `;
+  document.head.appendChild(style);
+
+  function patientTitleName(name){
+    name=String(name||'').trim();
+    if(!name) return name;
+    if(/^السيد\s+/.test(name) || /^السيدة\s+/.test(name)) return name;
+    return 'السيد ' + name;
+  }
+  window.labflowPatientTitleName = patientTitleName;
+
+  function paintFlagRows(){
+    document.querySelectorAll('#resultItems .result-row-v25, #resultItems .result-row-v21').forEach(row=>{
+      const flag=(row.querySelector('[name="flag"]')?.value||'normal').toLowerCase();
+      row.classList.toggle('flag-high', flag==='high');
+      row.classList.toggle('flag-low', flag==='low');
+      const input=row.querySelector('[name="result"]');
+      if(input){
+        input.classList.toggle('lf-abnormal-red', flag==='high'||flag==='low');
+      }
+    });
+  }
+  document.addEventListener('change', e=>{ if(e.target && e.target.matches('#resultItems [name="flag"]')) paintFlagRows(); });
+  document.addEventListener('input', e=>{ if(e.target && e.target.matches('#resultItems [name="result"]')) paintFlagRows(); });
+
+  const oldOpenResults=window.openResults;
+  if(typeof oldOpenResults==='function'){
+    window.openResults=function(id){
+      const r=oldOpenResults.apply(this,arguments);
+      setTimeout(paintFlagRows,60);
+      return r;
+    };
+  }
+
+  const oldCollect=window.collectResultInputs;
+  if(typeof oldCollect==='function'){
+    window.collectResultInputs=function(baseOrder){
+      paintFlagRows();
+      return oldCollect.apply(this,arguments);
+    };
+  }
+
+  const oldBuild=window.buildResultPrintHtml;
+  if(typeof oldBuild==='function'){
+    window.buildResultPrintHtml=function(order){
+      const args=[...arguments];
+      if(order && typeof order==='object') args[0]={...order, patientName: patientTitleName(order.patientName||order.name||'')};
+      return oldBuild.apply(this,args);
+    };
+  }
+
+  const oldPrintReport=window.printReport;
+  if(typeof oldPrintReport==='function'){
+    window.printReport=function(order){
+      const args=[...arguments];
+      if(order && typeof order==='object') args[0]={...order, patientName: patientTitleName(order.patientName||order.name||'')};
+      return oldPrintReport.apply(this,args);
+    };
+  }
+})();
+/* ===== End requested patch ===== */
+
 </script>
 </body></html>
