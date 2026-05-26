@@ -1,20 +1,13 @@
 {
-  "name": "LabFlow Laboratory Management System",
+  "name": "LabFlow",
   "short_name": "LabFlow",
-  "description": "LabFlow cloud laboratory system",
-  "id": "./login.html",
-  "start_url": "./login.html",
+  "description": "LabFlow Laboratory Management System",
+  "start_url": "login.html",
   "scope": "./",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "background_color": "#07101d",
-  "theme_color": "#19d184",
+  "background_color": "#010409",
+  "theme_color": "#10c8a6",
   "orientation": "any",
-  "dir": "rtl",
-  "lang": "ar",
   "icons": [
     {
       "src": "icon-192.png",
@@ -27,30 +20,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "النسخة الكاملة",
-      "short_name": "الكاملة",
-      "url": "./index.html",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "نسخة الموبايل",
-      "short_name": "الموبايل",
-      "url": "./mobile_index_results_cloud.html",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
     }
   ]
 }
