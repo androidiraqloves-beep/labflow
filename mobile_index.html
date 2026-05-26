@@ -218,6 +218,51 @@ button { border: 0; cursor: pointer; }
 .resultLine b { display: block; margin-bottom: 8px; color: var(--ink); }
 .resultLine input { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-top: 6px; }
 .shareHint { background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); color: var(--ok); border-radius: 18px; padding: 12px; margin-top: 10px; font-size: 12px; line-height: 1.8; }
+
+/* Mobile registration additions - keeps original visual identity */
+.regNotice {
+  background: rgba(16, 200, 166, 0.08);
+  border: 1px solid rgba(16, 200, 166, 0.22);
+  color: var(--brand);
+  border-radius: 18px;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+.testPickList { display: grid; gap: 9px; width: 100%; max-height: 360px; overflow-y: auto; padding: 2px; }
+.testPick {
+  width: 100%; text-align: right;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 18px; padding: 12px; color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.testPick.active { border-color: var(--brand); background: rgba(16, 200, 166, 0.12); }
+.testPick b { display: block; font-size: 14px; }
+.testPick small { display: block; color: var(--muted); margin-top: 4px; font-size: 11px; }
+.testPick .price { color: var(--brand); font-weight: 1000; white-space: nowrap; }
+.selectedBox {
+  display: flex; gap: 7px; flex-wrap: wrap; min-height: 42px;
+  background: var(--surface2); border: 1px dashed var(--line);
+  border-radius: 18px; padding: 9px; margin-top: 10px;
+}
+.selectedTag {
+  display: inline-flex; align-items: center; gap: 7px;
+  border-radius: 999px; background: rgba(16, 200, 166, .13);
+  border: 1px solid rgba(16, 200, 166, .35);
+  color: var(--brand); padding: 8px 10px; font-size: 12px; font-weight: 1000;
+}
+.selectedTag button {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(248, 81, 73, .14); color: var(--danger); font-weight: 1000;
+}
+.summaryLine {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--surface2); border: 1px solid var(--line);
+  border-radius: 18px; padding: 12px; margin: 8px 0;
+}
+.summaryLine b { font-size: 20px; color: var(--brand); }
+
 </style>
 </head>
 <body>
@@ -229,14 +274,49 @@ button { border: 0; cursor: pointer; }
   <main class="wrap">
     <section id="home" class="page active">
       <div class="stats"><div class="stat"><span>طلبات اليوم</span><b id="sOrders">0</b></div><div class="stat"><span>جاهزة</span><b id="sReady">0</b></div><div class="stat"><span>مدفوع</span><b id="sPaid">0</b></div><div class="stat"><span>الباقي</span><b id="sRemain">0</b></div></div>
-      <div class="card"><div class="head"><h2>المتابعة السريعة</h2></div><div class="row"><button class="btn primary" onclick="go('results')">🧪 النتائج</button><button class="btn" onclick="go('patients')">👤 المرضى</button><button class="btn" onclick="go('money')">💰 الحسابات</button><button class="btn" onclick="go('more')">☰ المزيد</button></div></div>
+      <div class="card"><div class="head"><h2>المتابعة السريعة</h2></div><button class="btn primary full" onclick="go('register')">➕ تسجيل طلب جديد</button><div class="row" style="margin-top:10px"><button class="btn" onclick="go('results')">🧪 النتائج</button><button class="btn" onclick="go('patients')">👤 المرضى</button><button class="btn" onclick="go('money')">💰 الحسابات</button><button class="btn" onclick="go('more')">☰ المزيد</button></div></div>
       <div class="card"><div class="head"><h2>آخر الطلبات</h2><small class="muted" id="recentCount">0</small></div><div id="recentList" class="list"></div></div>
     </section>
+
+    <section id="register" class="page">
+      <div class="head"><h2>تسجيل طلب جديد</h2><button class="btn small" onclick="clearRegisterForm()">تفريغ</button></div>
+      <div class="card">
+        <div class="regNotice">هذا التسجيل السريع مربوط بنفس حساب النسخة الكاملة. أي طلب تحفظه هنا يظهر مباشرة في ملف الكمبيوتر.</div>
+        <div class="field"><label>اسم المريض</label><input id="regName" placeholder="مثال: محمد أحمد"></div>
+        <div class="row">
+          <div class="field"><label>رقم الهاتف</label><input id="regPhone" inputmode="tel" placeholder="07xxxxxxxxx"></div>
+          <div class="field"><label>العمر</label><input id="regAge" inputmode="numeric" placeholder="مثال: 35"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>الجنس</label><select id="regGender"><option value="">غير محدد</option><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option></select></div>
+          <div class="field"><label>الطبيب / الجهة</label><input id="regDoctor" placeholder="اختياري"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head"><h2>اختيار التحاليل</h2><small class="muted" id="regTestsCount">0</small></div>
+        <div class="field"><input id="qRegTests" placeholder="بحث عن تحليل" oninput="renderRegisterTests()"></div>
+        <div class="chips" id="regCats"></div>
+        <div class="row">
+          <div class="field"><label>تحليل يدوي</label><input id="manualTestName" placeholder="اسم التحليل"></div>
+          <div class="field"><label>السعر</label><input id="manualTestPrice" inputmode="decimal" placeholder="0"></div>
+        </div>
+        <button class="btn small full" onclick="addManualTest()">إضافة التحليل اليدوي</button>
+        <div id="regSelectedBox" class="selectedBox"></div>
+        <div id="regTestsList" class="testPickList"></div>
+      </div>
+      <div class="card">
+        <div class="summaryLine"><span>المجموع</span><b id="regTotalView">0</b></div>
+        <div class="field"><label>المدفوع</label><input id="regPaid" inputmode="decimal" placeholder="0"></div>
+        <div class="field"><label>ملاحظات</label><textarea id="regNotes" placeholder="اختياري"></textarea></div>
+        <button class="btn primary full" onclick="saveMobileOrder()">حفظ الطلب</button>
+      </div>
+    </section>
+
     <section id="results" class="page"><div class="head"><h2>النتائج</h2><button class="btn small" onclick="renderAll()">تحديث</button></div><div class="search"><div class="field"><input id="qResults" placeholder="بحث باسم المريض أو التحليل" oninput="renderResults()"></div><div class="chips"><button class="chip active" data-filter="all" onclick="filterStatus('all')">الكل</button><button class="chip" data-filter="new" onclick="filterStatus('new')">بانتظار</button><button class="chip" data-filter="drawn" onclick="filterStatus('drawn')">تم السحب</button><button class="chip" data-filter="processing" onclick="filterStatus('processing')">قيد التحليل</button><button class="chip" data-filter="ready" onclick="filterStatus('ready')">جاهزة</button></div></div><div id="resultsList" class="list"></div></section>
     <section id="patients" class="page"><div class="head"><h2>المرضى</h2><small class="muted" id="patientsCount">0</small></div><div class="search"><div class="field"><input id="qPatients" placeholder="بحث باسم أو هاتف" oninput="renderPatients()"></div></div><div id="patientsList" class="list"></div></section>
     <section id="money" class="page"><div class="head"><h2>الحسابات</h2><small class="muted">اليوم</small></div><div class="stats" style="margin-top:0"><div class="stat"><span>الإجمالي</span><b id="mTotal">0</b></div><div class="stat"><span>المدفوع</span><b id="mPaid">0</b></div><div class="stat"><span>الباقي</span><b id="mRemain">0</b></div><div class="stat"><span>مصروف</span><b id="mExp">0</b></div></div><div class="card"><div class="head"><h2>مصروف سريع</h2></div><div class="field"><label>البيان</label><input id="expTitle" placeholder="مثال: شراء مواد"></div><div class="field"><label>المبلغ</label><input id="expAmount" inputmode="decimal" placeholder="0"></div><button class="btn primary full" onclick="addExpense()">حفظ المصروف</button></div><div class="card"><div class="head"><h2>مصروفات اليوم</h2></div><div id="expList" class="list"></div></div></section>
     <section id="shifts" class="page"><div class="head"><h2>الشفتات</h2></div><div class="card"><p class="muted" id="shiftText">لا يوجد شفت مفتوح.</p><div class="row"><button class="btn primary" onclick="openShift()">فتح شفت</button><button class="btn red" onclick="closeShift()">تقفيل شفت</button></div></div><div class="card"><div class="head"><h2>سجل الشفتات</h2></div><div id="shiftList" class="list"></div></div></section>
-    <section id="more" class="page"><div class="head"><h2>المزيد</h2></div><div class="card"><button class="btn dark full" onclick="location.href='index.html'">فتح النسخة الكاملة</button><button class="btn red full" style="margin-top:10px" onclick="logout()">تسجيل خروج</button><p class="tiny">هذه النسخة للموبايل فقط للمتابعة، النتائج، الحسابات والشفتات. التسجيل الكامل يبقى من النسخة الكاملة.</p></div></section>
+    <section id="more" class="page"><div class="head"><h2>المزيد</h2></div><div class="card"><button class="btn primary full" onclick="go('register')">تسجيل طلب جديد</button><button class="btn dark full" style="margin-top:10px" onclick="location.href='index.html'">فتح النسخة الكاملة</button><button class="btn red full" style="margin-top:10px" onclick="logout()">تسجيل خروج</button><p class="tiny">هذه النسخة للموبايل للمتابعة والنتائج والحسابات والشفتات، وتمت إضافة تسجيل طلب سريع مرتبط بنفس بيانات النسخة الكاملة.</p></div></section>
   </main>
   <nav class="nav"><button class="active" data-go="home" onclick="go('home')"><span>⌂</span>الرئيسية</button><button data-go="results" onclick="go('results')"><span>🧪</span>النتائج</button><button data-go="patients" onclick="go('patients')"><span>👤</span>المرضى</button><button data-go="money" onclick="go('money')"><span>💰</span>الحسابات</button><button data-go="shifts" onclick="go('shifts')"><span>☰</span>الشفتات</button></nav>
 </div>
@@ -245,7 +325,7 @@ button { border: 0; cursor: pointer; }
 <script>
 (function(){
 const firebaseConfig={apiKey:"AIzaSyB5MTJRDNILD3KalDIMmdOQxGFPsBgwOC8",authDomain:"labflow-a8cdc.firebaseapp.com",databaseURL:"https://labflow-a8cdc-default-rtdb.asia-southeast1.firebasedatabase.app/",projectId:"labflow-a8cdc",storageBucket:"labflow-a8cdc.firebasestorage.app",messagingSenderId:"23108604166",appId:"1:23108604166:web:d4888aa101507391e9ce87"};
-let auth,db,cloudRef,uid,filter='all',editId=null;let deviceId=localStorage.getItem('device_id')||localStorage.getItem('labflow_device_id')||'';let state={lab:{},patients:[],orders:[],expenses:[],shiftHistory:[],currentShift:null,tests:[]};
+let auth,db,cloudRef,uid,filter='all',editId=null;let selectedTests=[],testCat='all';let deviceId=localStorage.getItem('device_id')||localStorage.getItem('labflow_device_id')||'';let state={lab:{},patients:[],orders:[],expenses:[],shiftHistory:[],currentShift:null,tests:[]};
 const $=id=>document.getElementById(id);const arr=v=>(Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[]));const num=v=>Number(String(v??0).replace(/[^0-9.-]/g,''))||0;const money=v=>Math.round(num(v)).toLocaleString('en-US');const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);const iso=()=>new Date().toISOString();const day=d=>{let x=d?new Date(d):new Date();return isNaN(x)?new Date().toISOString().slice(0,10):x.toISOString().slice(0,10)};
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function show(el){$('loading').classList.add('hide');$('blocked').classList.add('hide');$('app').classList.add('hide');$(el).classList.remove('hide')}function block(msg){$('blockedText').textContent=msg;show('blocked')}function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(window.__t);window.__t=setTimeout(()=>$('toast').classList.remove('show'),2600)}
@@ -254,10 +334,24 @@ function orderName(o){return o.patientName||o.name||o.patient?.name||'بدون �
 function save(obj){if(!cloudRef)return toast('لا يوجد اتصال');$('syncText').textContent='يحفظ...';cloudRef.update(obj).then(()=>$('syncText').textContent='متصل').catch(e=>toast('خطأ حفظ: '+e.message))}
 function start(user){uid=user.uid;localStorage.setItem('lab_user_uid',uid);db.ref('users/'+uid).on('value',snap=>{let u=snap.val()||{};if(u.status&&u.status!=='active')return block('الاشتراك موقوف من لوحة الأدمن.');if(u.expiresAtMs&&u.expiresAtMs<Date.now())return block('انتهى الاشتراك.');if(deviceId&&u.activeDevices&&!u.activeDevices[deviceId])return block('هذا الجهاز غير مربوط. افتح صفحة الدخول وسجل من جديد.');show('app');$('userLine').textContent=user.email||u.email||'نسخة الموبايل'});cloudRef=db.ref('users/'+uid+'/cloudData');cloudRef.on('value',snap=>{state=normalize(snap.val());$('labName').textContent=state.lab.name||state.lab.labName||'LabFlow';renderAll()})}
 function init(){if(location.protocol==='file:'||location.protocol==='content:'){block('لا تفتح الملف من مدير الملفات. ارفعه على GitHub Pages وافتح رابط HTTPS حتى يشتغل Firebase والربط السحابي.');return}if(typeof firebase==='undefined'){block('Firebase لم يحمل. تأكد من الإنترنت وافتح الرابط من Chrome أو Edge.');return}firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.database();auth.onAuthStateChanged(user=>{if(!user)return block('افتح login.html وسجل دخول بنفس حساب المختبر.');start(user)});setTimeout(()=>{if(!$('loading').classList.contains('hide'))$('loadText').textContent='إذا بقيت هذه الشاشة، حدث الصفحة أو سجل دخول من login.html'},5000)}
-window.go=function(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===page));window.scrollTo({top:0,behavior:'smooth'});if(page==='results')renderResults();if(page==='patients')renderPatients();if(page==='money')renderMoney();if(page==='shifts')renderShifts()}
+window.go=function(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===page));window.scrollTo({top:0,behavior:'smooth'});if(page==='register')renderRegisterTests();if(page==='results')renderResults();if(page==='patients')renderPatients();if(page==='money')renderMoney();if(page==='shifts')renderShifts()}
 function card(o){let cls=(o.status||'new')==='ready'?'ready':(o.status||'new')==='processing'?'processing':'waiting';let ready=(o.status||'new')==='ready';return `<div class="item ${cls}"><div class="itemTop"><div><b>${esc(orderName(o))}</b><div class="tiny">${esc(o.orderNo||o.id||'')} • ${orderDate(o)?new Date(orderDate(o)).toLocaleString('ar-IQ'):''}</div></div>${pill(o.status)}</div><div class="testLine">${esc(orderTests(o))}</div><div class="moneyRow"><span class="pill">${money(total(o))}</span><span class="pill ok">مدفوع ${money(paid(o))}</span>${remain(o)?`<span class="pill warn">باقي ${money(remain(o))}</span>`:''}</div><div class="actions"><button class="btn small primary" onclick="editOrder('${esc(o.id)}')">إدخال نتيجة</button>${ready?`<button class="btn small whatsapp" onclick="shareResult('${esc(o.id)}')">واتساب ملف</button>`:`<button class="btn small" onclick="setReady('${esc(o.id)}')">جعلها جاهزة</button>`}<select onchange="setStatus('${esc(o.id)}',this.value)" data-st="${esc(o.id)}"><option value="new">بانتظار</option><option value="drawn">تم السحب</option><option value="processing">قيد التحليل</option><option value="ready">جاهزة</option></select><button class="btn small" onclick="previewResult('${esc(o.id)}')">معاينة</button></div></div>`}
-window.renderAll=function(){let today=state.orders.filter(o=>day(orderDate(o))===day());let ready=today.filter(o=>(o.status||'new')==='ready').length;let waiting=today.filter(o=>(o.status||'new')!=='ready').length;$('todayOrders').textContent=today.length;$('hReady').textContent=ready;$('hWaiting').textContent=waiting;$('sOrders').textContent=today.length;$('sReady').textContent=ready;$('sPaid').textContent=money(today.reduce((s,o)=>s+paid(o),0));$('sRemain').textContent=money(today.reduce((s,o)=>s+remain(o),0));$('recentCount').textContent=state.orders.length;$('recentList').innerHTML=state.orders.slice(0,8).map(card).join('')||'<div class="empty">لا توجد طلبات</div>';renderResults();renderPatients();renderMoney();renderShifts();syncSelects()}
+window.renderAll=function(){let today=state.orders.filter(o=>day(orderDate(o))===day());let ready=today.filter(o=>(o.status||'new')==='ready').length;let waiting=today.filter(o=>(o.status||'new')!=='ready').length;$('todayOrders').textContent=today.length;$('hReady').textContent=ready;$('hWaiting').textContent=waiting;$('sOrders').textContent=today.length;$('sReady').textContent=ready;$('sPaid').textContent=money(today.reduce((s,o)=>s+paid(o),0));$('sRemain').textContent=money(today.reduce((s,o)=>s+remain(o),0));$('recentCount').textContent=state.orders.length;$('recentList').innerHTML=state.orders.slice(0,8).map(card).join('')||'<div class="empty">لا توجد طلبات</div>';renderResults();renderPatients();renderMoney();renderShifts();renderRegisterTests();syncSelects()}
 function syncSelects(){setTimeout(()=>document.querySelectorAll('[data-st]').forEach(s=>{let o=state.orders.find(x=>String(x.id)===String(s.dataset.st));if(o)s.value=o.status||'new'}),0)}
+function testLabel(t){return t.name||t.testName||t.title||t.arName||'تحليل'}
+function testPrice(t){return num(t.price||t.cost||t.amount||0)}
+function testRange(t){return t.normalRange||t.range||t.ref||t.reference||''}
+function testCategory(t){return t.category||t.cat||t.group||'عام'}
+function selectedKey(t){return String(t.__manualId||t.id||t.code||testLabel(t))}
+function updateRegisterSummary(){let total=selectedTests.reduce((s,t)=>s+testPrice(t),0);if($('regTotalView'))$('regTotalView').textContent=money(total);if($('regSelectedBox')){$('regSelectedBox').innerHTML=selectedTests.map((t,i)=>`<span class="selectedTag">${esc(testLabel(t))}<button onclick="removeSelectedTest(${i})">×</button></span>`).join('')||'<span class="tiny">لم تختر أي تحليل بعد</span>'}}
+window.renderRegisterTests=function(){if(!$('regTestsList'))return;let tests=arr(state.tests);let cats=['all',...Array.from(new Set(tests.map(testCategory).filter(Boolean)))];$('regCats').innerHTML=cats.map(c=>`<button class="chip ${testCat===c?'active':''}" onclick="setRegCat('${esc(String(c))}')">${c==='all'?'الكل':esc(c)}</button>`).join('');let q=($('qRegTests').value||'').toLowerCase().trim();let list=tests.map((t,i)=>({t,i})).filter(x=>(testCat==='all'||testCategory(x.t)===testCat)&&(!q||[testLabel(x.t),testCategory(x.t),testRange(x.t)].join(' ').toLowerCase().includes(q)));$('regTestsCount').textContent=tests.length; if(!tests.length){$('regTestsList').innerHTML='<div class="empty">لا توجد تحاليل محفوظة في النسخة الكاملة. أضف تحليل يدوي أو أضف مكتبة التحاليل من الكمبيوتر.</div>';updateRegisterSummary();return}$('regTestsList').innerHTML=list.slice(0,160).map(({t,i})=>{let active=selectedTests.some(s=>selectedKey(s)===selectedKey(t));return `<button class="testPick ${active?'active':''}" onclick="toggleRegTest(${i})"><span><b>${esc(testLabel(t))}</b><small>${esc(testCategory(t))}${testRange(t)?' • '+esc(testRange(t)):''}</small></span><span class="price">${money(testPrice(t))}</span></button>`}).join('')||'<div class="empty">لا توجد نتائج بحث</div>';updateRegisterSummary()}
+window.setRegCat=function(c){testCat=c;renderRegisterTests()}
+window.toggleRegTest=function(i){let t=arr(state.tests)[i];if(!t)return;let k=selectedKey(t);let at=selectedTests.findIndex(s=>selectedKey(s)===k);if(at>=0)selectedTests.splice(at,1);else selectedTests.push({...t});renderRegisterTests()}
+window.removeSelectedTest=function(i){selectedTests.splice(i,1);renderRegisterTests()}
+window.addManualTest=function(){let name=($('manualTestName').value||'').trim();let price=num($('manualTestPrice').value);if(!name)return toast('اكتب اسم التحليل اليدوي');selectedTests.push({__manualId:'manual_'+makeId(),name,price,category:'يدوي'});$('manualTestName').value='';$('manualTestPrice').value='';renderRegisterTests()}
+window.clearRegisterForm=function(){['regName','regPhone','regAge','regDoctor','regPaid','regNotes','manualTestName','manualTestPrice','qRegTests'].forEach(id=>{if($(id))$(id).value=''});if($('regGender'))$('regGender').value='';selectedTests=[];testCat='all';renderRegisterTests()}
+window.saveMobileOrder=function(){let name=($('regName').value||'').trim();let phone=($('regPhone').value||'').trim();let age=($('regAge').value||'').trim();let gender=$('regGender').value||'';let doctor=($('regDoctor').value||'').trim();let notes=($('regNotes').value||'').trim();if(!name)return toast('اكتب اسم المريض');if(!selectedTests.length)return toast('اختار تحليل واحد على الأقل');let patient=state.patients.find(p=>(phone&&String(p.phone||'')===phone)||String(p.name||p.patientName||'').trim()===name);if(!patient){patient={id:makeId(),name,phone,age,gender,createdAt:iso(),source:'mobile'};state.patients=[patient,...state.patients]}else{patient.name=patient.name||name;patient.phone=patient.phone||phone;if(age)patient.age=age;if(gender)patient.gender=gender;patient.updatedAt=iso()}let items=selectedTests.map(t=>({id:t.id||t.code||'',name:testLabel(t),price:testPrice(t),category:testCategory(t),normalRange:testRange(t),result:'',note:''}));let sum=items.reduce((s,t)=>s+num(t.price),0);let paidAmount=num($('regPaid').value);let order={id:makeId(),orderNo:'M-'+Date.now().toString().slice(-7),patientId:patient.id,patientName:name,patientPhone:phone,age,gender,doctor,items,tests:items,total:sum,paid:paidAmount,status:'new',notes,createdAt:iso(),source:'mobile'};state.orders=[order,...state.orders];save({patients:state.patients,orders:state.orders});toast('تم تسجيل الطلب وربطه بالسحابة');clearRegisterForm();go('results')}
+
 window.filterStatus=function(f){filter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===f));renderResults()}
 window.renderResults=function(){let q=($('qResults').value||'').toLowerCase().trim();let list=state.orders.filter(o=>(filter==='all'||(o.status||'new')===filter)&&(!q||[orderName(o),orderTests(o),o.orderNo,o.id].join(' ').toLowerCase().includes(q)));$('resultsList').innerHTML=list.slice(0,150).map(card).join('')||'<div class="empty">لا توجد نتائج</div>';syncSelects()}
 window.renderPatients=function(){let q=($('qPatients').value||'').toLowerCase().trim();let list=state.patients.filter(p=>!q||String(p.name||p.patientName||'').toLowerCase().includes(q)||String(p.phone||'').includes(q));$('patientsCount').textContent=list.length;$('patientsList').innerHTML=list.slice(0,120).map(p=>{let name=p.name||p.patientName||'بدون اسم';let os=state.orders.filter(o=>o.patientId===p.id||orderName(o)===name);let debt=os.reduce((s,o)=>s+remain(o),0);return `<div class="item"><div class="itemTop"><div><b>${esc(name)}</b><div class="tiny">${esc(p.phone||'بدون رقم')} • ${esc(p.age||'')}</div></div><span class="pill">${os.length} طلب</span></div><div class="moneyRow"><span class="pill ${debt?'warn':'ok'}">باقي ${money(debt)}</span></div></div>`}).join('')||'<div class="empty">لا توجد مرضى</div>'}
