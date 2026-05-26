@@ -414,7 +414,7 @@ function showPage(page, push=true){
   if(!document.getElementById(page)) page='home';
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
-  if(push && currentPage!==page){ pageStack.push(page); if(pageStack.length>20) pageStack.shift(); try{history.pushState({lfMobilePage:page},'',location.href)}catch(e){} }
+  if(push && currentPage!==page){ pageStack.push(page); if(pageStack.length>20) pageStack.shift(); }
   currentPage=page;
   window.scrollTo({top:0,behavior:'smooth'});
   if(page==='register')renderRegisterTests();
@@ -430,8 +430,22 @@ window.mobileBack=function(){
   if(pageStack.length>1){ pageStack.pop(); showPage(pageStack[pageStack.length-1]||'home', false); }
   else showPage('home', false);
 }
-try{history.replaceState({lfMobilePage:'home'},'',location.href)}catch(e){}
-window.addEventListener('popstate',function(e){ mobileBack(); try{history.pushState({lfMobilePage:currentPage},'',location.href)}catch(_){} });
+let __labflowBackGuardReady=false;
+function installBackGuard(){
+  if(__labflowBackGuardReady) return;
+  __labflowBackGuardReady=true;
+  try{
+    history.replaceState({lfMobileGuard:true,page:currentPage},'',location.href);
+    history.pushState({lfMobileGuard:true,page:currentPage},'',location.href);
+  }catch(e){}
+}
+installBackGuard();
+window.addEventListener('popstate',function(e){
+  mobileBack();
+  setTimeout(function(){
+    try{history.pushState({lfMobileGuard:true,page:currentPage},'',location.href)}catch(_){}
+  },0);
+});
 function card(o){let cls=(o.status||'new')==='ready'?'ready':(o.status||'new')==='processing'?'processing':'waiting';let ready=(o.status||'new')==='ready';return `<div class="item ${cls}"><div class="itemTop"><div><b>${esc(orderName(o))}</b><div class="tiny">${esc(o.orderNo||o.id||'')} • ${orderDate(o)?new Date(orderDate(o)).toLocaleString('ar-IQ'):''}</div></div>${pill(o.status)}</div><div class="testLine">${esc(orderTests(o))}</div><div class="moneyRow"><span class="pill">${money(total(o))}</span><span class="pill ok">مدفوع ${money(paid(o))}</span>${remain(o)?`<span class="pill warn">باقي ${money(remain(o))}</span>`:''}</div><div class="actions"><button class="btn small primary" onclick="editOrder('${esc(o.id)}')">إدخال نتيجة</button>${ready?`<button class="btn small whatsapp" onclick="shareResult('${esc(o.id)}')">واتساب ملف</button>`:`<button class="btn small" onclick="setReady('${esc(o.id)}')">جعلها جاهزة</button>`}<select onchange="setStatus('${esc(o.id)}',this.value)" data-st="${esc(o.id)}"><option value="new">بانتظار</option><option value="drawn">تم السحب</option><option value="processing">قيد التحليل</option><option value="ready">جاهزة</option></select><button class="btn small" onclick="previewResult('${esc(o.id)}')">معاينة</button></div></div>`}
 window.renderAll=function(){let today=state.orders.filter(o=>day(orderDate(o))===day());let ready=today.filter(o=>(o.status||'new')==='ready').length;let waiting=today.filter(o=>(o.status||'new')!=='ready').length;$('todayOrders').textContent=today.length;$('hReady').textContent=ready;$('hWaiting').textContent=waiting;$('sOrders').textContent=today.length;$('sReady').textContent=ready;$('sPaid').textContent=money(today.reduce((s,o)=>s+paid(o),0));$('sRemain').textContent=money(today.reduce((s,o)=>s+remain(o),0));$('recentCount').textContent=state.orders.length;$('recentList').innerHTML=state.orders.slice(0,8).map(card).join('')||'<div class="empty">لا توجد طلبات</div>';renderResults();renderPatients();renderMoney();renderShifts();renderRegisterTests();syncSelects()}
 function syncSelects(){setTimeout(()=>document.querySelectorAll('[data-st]').forEach(s=>{let o=state.orders.find(x=>String(x.id)===String(s.dataset.st));if(o)s.value=o.status||'new'}),0)}
@@ -496,26 +510,50 @@ window.previewResult=function(oid){let o=state.orders.find(x=>String(x.id)===Str
 async function createResultFile(o){const lab=state.lab.name||state.lab.labName||'LabFlow';const W=1080;let items=orderItems(o);let H=Math.max(1350,620+items.length*90);const c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d');ctx.direction='rtl';ctx.fillStyle='#010409';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,190);ctx.fillStyle='#10c8a6';ctx.beginPath();ctx.roundRect(60,45,96,96,28);ctx.fill();ctx.fillStyle='#0d1117';ctx.font='bold 38px Tahoma, Arial';ctx.textAlign='center';ctx.fillText('LF',108,108);ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='bold 44px Tahoma, Arial';ctx.fillText(lab,W-70,82);ctx.font='26px Tahoma, Arial';ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText('تقرير نتيجة مختبرية',W-70,125);ctx.fillStyle='#090b0f';ctx.fillRect(0,190,W,H-190);roundRect(ctx,60,235,W-120,245,28,'#0d1117','#30363d');ctx.fillStyle='#e6edf3';ctx.font='bold 32px Tahoma, Arial';ctx.fillText('بيانات المريض',W-95,285);ctx.font='27px Tahoma, Arial';ctx.fillStyle='#8b949e';ctx.fillText('الاسم: '+orderName(o),W-95,335);ctx.fillText('رقم الطلب: '+(o.orderNo||o.id||''),W-95,380);ctx.fillText('التاريخ: '+new Date(orderDate(o)||Date.now()).toLocaleString('ar-IQ'),W-95,425);ctx.fillText('الحالة: '+statusText(o.status),W-95,470);let y=545;ctx.fillStyle='#e6edf3';ctx.font='bold 34px Tahoma, Arial';ctx.fillText('النتائج',W-75,y);y+=40;roundRect(ctx,60,y,W-120,62,18,'#161b22','#30363d');ctx.fillStyle='#e6edf3';ctx.font='bold 25px Tahoma, Arial';ctx.fillText('التحليل',W-95,y+40);ctx.fillText('النتيجة',W-440,y+40);ctx.fillText('المدى الطبيعي',W-720,y+40);y+=78;ctx.font='25px Tahoma, Arial';for(const it of items){let name=it.name||it.testName||it.title||'تحليل';let result=it.result||it.value||'-';let range=it.normalRange||it.range||it.ref||'';roundRect(ctx,60,y,W-120,70,16,'#0d1117','#30363d');ctx.fillStyle='#e6edf3';ctx.textAlign='right';ctx.fillText(String(name).slice(0,25),W-95,y+44);ctx.fillStyle='#10c8a6';ctx.font='bold 26px Tahoma, Arial';ctx.fillText(String(result||'-').slice(0,18),W-440,y+44);ctx.font='24px Tahoma, Arial';ctx.fillStyle='#8b949e';ctx.fillText(String(range||'-').slice(0,22),W-720,y+44);ctx.font='25px Tahoma, Arial';y+=82}y+=22;ctx.fillStyle='#8b949e';ctx.font='22px Tahoma, Arial';ctx.fillText('تم إنشاء الملف من نسخة LabFlow للموبايل',W-75,y+30);ctx.fillText(new Date().toLocaleString('ar-IQ'),W-75,y+62);return new Promise((resolve,reject)=>c.toBlob(b=>{if(!b)return reject(new Error('Canvas error'));let safe=String(orderName(o)).replace(/[\\/:*?"<>|]+/g,'-').slice(0,35)||'patient';resolve(new File([b],`LabFlow-${safe}.jpg`,{type:'image/jpeg'}))},'image/jpeg',0.88))}
 function roundRect(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke()}}
 
-let pendingShareFile=null,pendingShareText='',pendingShareUrl='';
+let pendingShareFile=null,pendingShareText='',pendingShareUrl='',pendingSharePhone='';
 window.closeShareSheet=function(){let m=$('shareModal');if(m)m.classList.remove('show')}
-window.downloadPreparedResult=function(){if(!pendingShareFile)return toast('لا يوجد ملف جاهز');let a=document.createElement('a');a.href=pendingShareUrl||URL.createObjectURL(pendingShareFile);a.download=pendingShareFile.name||'LabFlow-result.jpg';document.body.appendChild(a);a.click();a.remove();toast('تم تنزيل ملف النتيجة')}
 window.closeShareModal=function(){$('shareModal').classList.remove('show')}
-window.downloadPreparedResult=function(){if(!pendingShareFile)return toast('لا يوجد ملف جاهز');let a=document.createElement('a');a.href=pendingShareUrl||URL.createObjectURL(pendingShareFile);a.download=pendingShareFile.name||'LabFlow-result.jpg';document.body.appendChild(a);a.click();a.remove();toast('تم تنزيل ملف النتيجة')}
+function openPreparedWhatsAppText(){
+  let phone=String(pendingSharePhone||'').replace(/\D/g,'');
+  let url=phone?('https://wa.me/'+phone+'?text='+encodeURIComponent(pendingShareText||'')):('https://wa.me/?text='+encodeURIComponent(pendingShareText||''));
+  window.open(url,'_blank');
+}
+window.downloadPreparedResult=function(){
+  if(!pendingShareFile)return toast('لا يوجد ملف جاهز');
+  let a=document.createElement('a');
+  a.href=pendingShareUrl||URL.createObjectURL(pendingShareFile);
+  a.download=pendingShareFile.name||'LabFlow-result.jpg';
+  document.body.appendChild(a);a.click();a.remove();
+  toast('تم تنزيل ملف النتيجة');
+}
 window.copyPreparedText=async function(){try{await navigator.clipboard.writeText(pendingShareText||'');toast('تم نسخ الرسالة')}catch(e){toast('تعذر النسخ')}}
-window.sharePreparedResult=async function(){
+window.copyPreparedImage=async function(){
   if(!pendingShareFile)return toast('لا يوجد ملف جاهز');
   try{
-    if(navigator.share && (!navigator.canShare || navigator.canShare({files:[pendingShareFile]}))){
-      await navigator.share({files:[pendingShareFile],title:'LabFlow Result',text:pendingShareText});
-      toast('اختار واتساب من نافذة المشاركة');return;
-    }
-    if(navigator.share){
-      await navigator.share({title:'LabFlow Result',text:pendingShareText});
-      toast('هذا المتصفح شارك النص فقط، نزّل الملف وأرفقه بواتساب');return;
-    }
-    toast('هذا المتصفح لا يدعم مشاركة الملفات. استخدم تنزيل الملف ثم أرفقه في واتساب.');
+    if(!window.isSecureContext) throw new Error('يحتاج HTTPS');
+    if(!navigator.clipboard || !window.ClipboardItem) throw new Error('الحافظة لا تدعم الصور');
+    await navigator.clipboard.write([new ClipboardItem({[pendingShareFile.type]: pendingShareFile})]);
+    toast('تم نسخ صورة النتيجة. افتح واتساب والصقها داخل المحادثة.');
+    openPreparedWhatsAppText();
   }catch(e){
-    toast('تعذرت المشاركة: '+(e.message||e));
+    toast('جهازك لا يدعم نسخ الصورة. استخدم تنزيل الملف ثم أرسله من واتساب.');
+  }
+}
+window.sharePreparedResult=async function(){
+  if(!pendingShareFile)return toast('لا يوجد ملف جاهز');
+  if(!window.isSecureContext){toast('المشاركة تحتاج رابط HTTPS. افتح الرابط من GitHub Pages أو Chrome.');return}
+  if(!navigator.share){toast('هذا المتصفح لا يدعم مشاركة الملفات. استخدم تنزيل الملف.');return}
+  try{
+    await navigator.share({files:[pendingShareFile],title:'LabFlow Result',text:pendingShareText});
+    toast('اختار واتساب من نافذة المشاركة');
+  }catch(e){
+    if(e && (e.name==='AbortError' || String(e.message||'').toLowerCase().includes('abort'))){toast('تم إلغاء المشاركة');return}
+    try{
+      await navigator.share({title:'LabFlow Result',text:pendingShareText});
+      toast('المتصفح شارك النص فقط. نزّل الملف وأرفقه بواتساب.');
+    }catch(_){
+      toast('المتصفح لا يدعم إرسال ملف النتيجة مباشرة. استخدم تنزيل الملف أو نسخ الصورة.');
+    }
   }
 }
 window.shareResult=async function(oid){
@@ -526,11 +564,11 @@ window.shareResult=async function(oid){
     toast('جاري تجهيز ملف النتيجة...');
     pendingShareFile=await createResultFile(o);
     pendingShareText=`نتيجة ${orderName(o)} - ${state.lab.name||state.lab.labName||'LabFlow'}`;
+    pendingSharePhone=orderPhone(o);
     if(pendingShareUrl)try{URL.revokeObjectURL(pendingShareUrl)}catch(e){}
     pendingShareUrl=URL.createObjectURL(pendingShareFile);
-    let phone=String(orderPhone(o)).replace(/\D/g,'');
-    let wa=phone?`https://wa.me/${phone}?text=${encodeURIComponent(pendingShareText+'\nتم تجهيز ملف النتيجة، يرجى إرفاقه من نافذة المشاركة.')}`:'';
-    $('shareBox').innerHTML=`<div class="card" style="box-shadow:none;border-color:var(--line)"><b>${esc(orderName(o))}</b><div class="tiny">الملف جاهز: ${esc(pendingShareFile.name)} • ${(pendingShareFile.size/1024).toFixed(0)} KB</div><img class="sharePreview" src="${pendingShareUrl}" alt="preview"><button class="btn whatsapp full" onclick="sharePreparedResult()">مشاركة الآن واختيار واتساب</button><button class="btn full" style="margin-top:10px" onclick="downloadPreparedResult()">تنزيل الملف</button>${wa?`<button class="btn full" style="margin-top:10px" onclick="window.open('${wa}','_blank')">فتح واتساب بنص الرسالة</button>`:''}<button class="btn full" style="margin-top:10px" onclick="copyPreparedText()">نسخ رسالة واتساب</button><div class="shareWarn">ملاحظة: إذا كنت فاتح الرابط من متصفح داخل تيليغرام/فيسبوك أو WebView، مشاركة الملفات قد لا تعمل. افتح الرابط من Chrome الأصلي حتى يظهر واتساب ضمن المشاركة.</div></div>`;
+    let directSupport=!!(navigator.share && window.isSecureContext);
+    $('shareBox').innerHTML=`<div class="card" style="box-shadow:none;border-color:var(--line)"><b>${esc(orderName(o))}</b><div class="tiny">الملف جاهز: ${esc(pendingShareFile.name)} • ${(pendingShareFile.size/1024).toFixed(0)} KB</div><img class="sharePreview" src="${pendingShareUrl}" alt="preview"><button class="btn whatsapp full" onclick="sharePreparedResult()">مشاركة الملف الآن</button><button class="btn full" style="margin-top:10px" onclick="copyPreparedImage()">نسخ الصورة وفتح واتساب</button><button class="btn full" style="margin-top:10px" onclick="downloadPreparedResult()">تنزيل الملف</button><button class="btn full" style="margin-top:10px" onclick="openPreparedWhatsAppText()">فتح واتساب بنص الرسالة</button><button class="btn full" style="margin-top:10px" onclick="copyPreparedText()">نسخ رسالة واتساب</button><div class="shareWarn">${directSupport?'اضغط مشاركة الملف الآن واختر WhatsApp. إذا لم يظهر واتساب، استخدم تنزيل الملف أو نسخ الصورة.':'هذا المتصفح/الرابط لا يدعم مشاركة الملفات مباشرة. افتح من Chrome عبر رابط HTTPS أو استخدم تنزيل الملف.'}</div></div>`;
     $('shareModal').classList.add('show');
   }catch(e){toast('تعذر تجهيز الملف: '+(e&&e.message?e.message:e))}
 }
