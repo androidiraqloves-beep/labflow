@@ -181,10 +181,10 @@ button { border: 0; cursor: pointer; }
   background: rgba(13, 17, 23, 0.85);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(6, 1fr);
   padding: 8px 7px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -14px 28px rgba(0,0,0,.4);
 }
-.nav button { background: transparent; color: var(--muted); border-radius: 18px; padding: 8px 2px; font-size: 10px; font-weight: 1000; }
+.nav button { background: transparent; color: var(--muted); border-radius: 18px; padding: 8px 1px; font-size: 9px; font-weight: 1000; }
 .nav span { display: block; font-size: 22px; line-height: 1; margin-bottom: 4px; filter: grayscale(1); }
 .nav button.active { background: rgba(16, 200, 166, 0.1); color: var(--brand); }
 .nav button.active span { filter: grayscale(0); }
@@ -274,7 +274,7 @@ button { border: 0; cursor: pointer; }
   <main class="wrap">
     <section id="home" class="page active">
       <div class="stats"><div class="stat"><span>طلبات اليوم</span><b id="sOrders">0</b></div><div class="stat"><span>جاهزة</span><b id="sReady">0</b></div><div class="stat"><span>مدفوع</span><b id="sPaid">0</b></div><div class="stat"><span>الباقي</span><b id="sRemain">0</b></div></div>
-      <div class="card"><div class="head"><h2>المتابعة السريعة</h2></div><button class="btn primary full" onclick="go('register')">➕ تسجيل طلب جديد</button><div class="row" style="margin-top:10px"><button class="btn" onclick="go('results')">🧪 النتائج</button><button class="btn" onclick="go('patients')">👤 المرضى</button><button class="btn" onclick="go('money')">💰 الحسابات</button><button class="btn" onclick="go('more')">☰ المزيد</button></div></div>
+      <div class="card"><div class="head"><h2>المتابعة السريعة</h2></div><div class="row"><button class="btn" onclick="go('results')">🧪 النتائج</button><button class="btn" onclick="go('patients')">👤 المرضى</button><button class="btn" onclick="go('money')">💰 الحسابات</button><button class="btn" onclick="go('more')">☰ المزيد</button></div></div>
       <div class="card"><div class="head"><h2>آخر الطلبات</h2><small class="muted" id="recentCount">0</small></div><div id="recentList" class="list"></div></div>
     </section>
 
@@ -318,7 +318,7 @@ button { border: 0; cursor: pointer; }
     <section id="shifts" class="page"><div class="head"><h2>الشفتات</h2></div><div class="card"><p class="muted" id="shiftText">لا يوجد شفت مفتوح.</p><div class="row"><button class="btn primary" onclick="openShift()">فتح شفت</button><button class="btn red" onclick="closeShift()">تقفيل شفت</button></div></div><div class="card"><div class="head"><h2>سجل الشفتات</h2></div><div id="shiftList" class="list"></div></div></section>
     <section id="more" class="page"><div class="head"><h2>المزيد</h2></div><div class="card"><button class="btn primary full" onclick="go('register')">تسجيل طلب جديد</button><button class="btn dark full" style="margin-top:10px" onclick="location.href='index.html'">فتح النسخة الكاملة</button><button class="btn red full" style="margin-top:10px" onclick="logout()">تسجيل خروج</button><p class="tiny">هذه النسخة للموبايل للمتابعة والنتائج والحسابات والشفتات، وتمت إضافة تسجيل طلب سريع مرتبط بنفس بيانات النسخة الكاملة.</p></div></section>
   </main>
-  <nav class="nav"><button class="active" data-go="home" onclick="go('home')"><span>⌂</span>الرئيسية</button><button data-go="results" onclick="go('results')"><span>🧪</span>النتائج</button><button data-go="patients" onclick="go('patients')"><span>👤</span>المرضى</button><button data-go="money" onclick="go('money')"><span>💰</span>الحسابات</button><button data-go="shifts" onclick="go('shifts')"><span>☰</span>الشفتات</button></nav>
+  <nav class="nav"><button class="active" data-go="home" onclick="go('home')"><span>⌂</span>الرئيسية</button><button data-go="register" onclick="go('register')"><span>➕</span>تسجيل</button><button data-go="results" onclick="go('results')"><span>🧪</span>النتائج</button><button data-go="patients" onclick="go('patients')"><span>👤</span>المرضى</button><button data-go="money" onclick="go('money')"><span>💰</span>الحسابات</button><button data-go="shifts" onclick="go('shifts')"><span>☰</span>الشفتات</button></nav>
 </div>
 <div id="editModal" class="modal"><div class="sheet"><div class="sheetGrip"></div><div class="head"><h2>إدخال نتيجة</h2><button class="btn small" onclick="closeEdit()">إغلاق</button></div><div id="editBox"></div></div></div>
 <div id="toast" class="toast"></div>
