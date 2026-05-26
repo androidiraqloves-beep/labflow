@@ -511,310 +511,6 @@ const $=id=>document.getElementById(id);const KEY='labflow_no_login_test_v10_lig
 /* ===== End LabFlow print fix V60 ===== */
 <\/script>
 <button id="fixedLogoutBtn" type="button" onclick="systemLogout()" title="تسجيل الخروج" style="position:fixed;left:18px;bottom:18px;z-index:99999;border:0;border-radius:999px;padding:12px 16px;background:#ef476f;color:#fff;font-weight:900;box-shadow:0 14px 34px rgba(0,0,0,.20);cursor:pointer;">🚪 خروج</button>
-
-<!-- LABFLOW_FINAL_DARK_PRINT_SECTION_FIX_START -->
-<style id="labflow-final-dark-print-section-fix">
-/* Final UI harmony patch: keeps light mode intact and fully restores dark-mode contrast */
-@media screen{
-  .topbar .page-title{flex:1 1 auto;min-width:0}
-  .lf-top-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:14px!important;margin-inline-start:16px!important;flex:0 0 auto!important}
-  #labflowThemeToggle{
-    position:static!important;left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;z-index:auto!important;
-    min-width:72px!important;height:38px!important;padding:8px 11px!important;margin:0!important;border-radius:12px!important;
-    font-size:12px!important;line-height:1!important;font-weight:1000!important;box-shadow:none!important;backdrop-filter:none!important;
-    display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;white-space:nowrap!important;
-  }
-  #topLogoutBtn{margin:0!important;height:38px!important;min-width:118px!important;padding:8px 12px!important;border-radius:12px!important}
-  html.lf-theme-light #labflowThemeToggle, html:not(.lf-theme-dark) #labflowThemeToggle{
-    background:#ffffff!important;color:#102033!important;border:1px solid #d8e5f1!important;box-shadow:0 8px 18px rgba(20,70,115,.08)!important;
-  }
-  html.lf-theme-dark{
-    --bg:#07101d!important;--bg2:#0b1728!important;--panel:#101d30!important;--panel2:#13243b!important;--panel3:#0d1828!important;
-    --text:#eef6ff!important;--muted:#aec1dc!important;--line:#2c4265!important;--brand:#19d184!important;--brand2:#48b7ff!important;
-    --sidebar-bg:#08121f!important;--shadow:0 18px 60px rgba(0,0,0,.35)!important;
-  }
-  html.lf-theme-dark, html.lf-theme-dark body{
-    background:radial-gradient(circle at 12% 0%,#173e63 0,#07101d 38%,#02060c 100%)!important;color:#eef6ff!important;
-  }
-  html.lf-theme-dark .app, html.lf-theme-dark .main{background:transparent!important;color:#eef6ff!important}
-  html.lf-theme-dark .topbar{
-    background:linear-gradient(180deg,rgba(18,33,52,.86),rgba(7,16,28,.76))!important;
-    border:1px solid rgba(170,195,225,.16)!important;color:#eef6ff!important;box-shadow:0 18px 50px rgba(0,0,0,.28)!important;
-  }
-  html.lf-theme-dark .side{background:linear-gradient(180deg,#08121f,#050b14)!important;border-left:1px solid rgba(72,183,255,.18)!important;color:#eef6ff!important}
-  html.lf-theme-dark .brand h1,html.lf-theme-dark .page-title h2,html.lf-theme-dark .section-head h3,html.lf-theme-dark h2,html.lf-theme-dark h3,
-  html.lf-theme-dark .card-title-v11 b,html.lf-theme-dark .module-title,html.lf-theme-dark .home-head h3{color:#eef6ff!important}
-  html.lf-theme-dark .brand p,html.lf-theme-dark .page-title p,html.lf-theme-dark .muted,html.lf-theme-dark .field label,
-  html.lf-theme-dark .card-title-v11 small,html.lf-theme-dark .module-sub,html.lf-theme-dark .home-head p,html.lf-theme-dark .mini-muted{color:#aec1dc!important}
-  html.lf-theme-dark .card,html.lf-theme-dark .modal-card,html.lf-theme-dark .home-shell,
-  html.lf-theme-dark .patient-card-v11,html.lf-theme-dark .tests-card-v11,html.lf-theme-dark .selected-card-v11,html.lf-theme-dark .order-bottom-v11,
-  html.lf-theme-dark .advanced-card,html.lf-theme-dark .employee-card-v17,html.lf-theme-dark .shift-card-v17,
-  html.lf-theme-dark .doctor-card,html.lf-theme-dark .offer-card,html.lf-theme-dark .stats-strip .mini-stat,
-  html.lf-theme-dark .admin-hero-v12,html.lf-theme-dark .patient-history-box{
-    background:linear-gradient(180deg,rgba(16,29,48,.96),rgba(9,18,31,.96))!important;
-    border:1px solid rgba(159,177,201,.18)!important;color:#eef6ff!important;box-shadow:0 18px 60px rgba(0,0,0,.30)!important;
-  }
-  html.lf-theme-dark .order-topbar-v11,html.lf-theme-dark .reg-titlebar{
-    background:linear-gradient(135deg,rgba(25,209,132,.12),rgba(72,183,255,.08),rgba(16,29,48,.96))!important;
-    border-color:rgba(159,177,201,.18)!important;color:#eef6ff!important;
-  }
-  html.lf-theme-dark .module-tile,html.lf-theme-dark .tests-table-v11,html.lf-theme-dark .selected-table-v11,
-  html.lf-theme-dark .test-table-scroll,html.lf-theme-dark .panel-glass,html.lf-theme-dark .selected-table-wrap,
-  html.lf-theme-dark .summary-box,html.lf-theme-dark .notes-box,html.lf-theme-dark .money-box-v11,html.lf-theme-dark .note-v11,
-  html.lf-theme-dark .selected-chips-v11,html.lf-theme-dark .template-card,html.lf-theme-dark .check,
-  html.lf-theme-dark .manager-row-v12,html.lf-theme-dark .qr-preview,html.lf-theme-dark .qc-chart-box,html.lf-theme-dark .shift-box{
-    background:#0b1728!important;border-color:#2c4265!important;color:#eef6ff!important;
-  }
-  html.lf-theme-dark .userbox,html.lf-theme-dark .logo-preview{
-    background:#0b1728!important;border-color:#2c4265!important;color:#eef6ff!important;
-  }
-  html.lf-theme-dark .field input,html.lf-theme-dark .field select,html.lf-theme-dark .field textarea,
-  html.lf-theme-dark .mini-select,html.lf-theme-dark .mini-result,html.lf-theme-dark .clean-select,html.lf-theme-dark .status-select,
-  html.lf-theme-dark .test-searchrow input,html.lf-theme-dark .test-searchrow select,
-  html.lf-theme-dark .search-row-v11 input,html.lf-theme-dark .search-row-v11 select,
-  html.lf-theme-dark .patient-grid-v11 input,html.lf-theme-dark .patient-grid-v11 select,
-  html.lf-theme-dark .clean-age input,html.lf-theme-dark .clean-age select,
-  html.lf-theme-dark .money-box-v11 input,html.lf-theme-dark .note-v11 input,
-  html.lf-theme-dark #testSearch,html.lf-theme-dark #backupOut,html.lf-theme-dark pre#backupOut{
-    background:#071322!important;color:#eef6ff!important;border:1px solid #2c4265!important;
-  }
-  html.lf-theme-dark .field input::placeholder,html.lf-theme-dark .field textarea::placeholder,
-  html.lf-theme-dark #testSearch::placeholder{color:#7890a6!important}
-  html.lf-theme-dark table,html.lf-theme-dark .table-wrap{background:rgba(7,19,34,.72)!important;border-color:rgba(159,177,201,.16)!important}
-  html.lf-theme-dark th,html.lf-theme-dark .tests-table-v11 thead th,html.lf-theme-dark .selected-table-v11 thead th,
-  html.lf-theme-dark .selected-order-table th,html.lf-theme-dark .test-select-table th{
-    background:#13243b!important;color:#e6f3ff!important;border-bottom-color:rgba(159,177,201,.16)!important;
-  }
-  html.lf-theme-dark td,html.lf-theme-dark .selected-order-table td,html.lf-theme-dark .test-select-table td{
-    background:transparent!important;color:#edf7ff!important;border-bottom-color:rgba(159,177,201,.12)!important;
-  }
-  html.lf-theme-dark tr:hover td{background:rgba(72,183,255,.06)!important}
-  html.lf-theme-dark .nav button{
-    background:rgba(255,255,255,.035)!important;color:#d6e6f8!important;border-color:rgba(159,177,201,.15)!important;box-shadow:none!important;
-  }
-  html.lf-theme-dark .nav button:hover,html.lf-theme-dark .nav button.active{
-    background:linear-gradient(135deg,rgba(25,209,132,.22),rgba(72,183,255,.15))!important;color:#fff!important;border-color:rgba(25,209,132,.55)!important;
-  }
-  html.lf-theme-dark .btn.ghost{background:transparent!important;color:#eef6ff!important;border-color:#2c4265!important}
-  html.lf-theme-dark .btn.danger,#topLogoutBtn{box-shadow:0 8px 18px rgba(239,71,111,.14)!important}
-  html.lf-theme-dark #labflowThemeToggle{
-    background:#0b1728!important;color:#eef6ff!important;border:1px solid #2c4265!important;box-shadow:0 8px 18px rgba(0,0,0,.22)!important;
-  }
-  html.lf-theme-dark .tiny-cat,html.lf-theme-dark .price-cell,html.lf-theme-dark .selected-tag,
-  html.lf-theme-dark .mini-badge-v17{filter:none!important}
-  html.lf-theme-dark .empty-order,html.lf-theme-dark .empty-tests{color:#ffe4a3!important;background:rgba(255,209,102,.07)!important;border-color:rgba(255,209,102,.28)!important}
-  @media(max-width:850px){
-    .topbar{flex-wrap:wrap!important}
-    .lf-top-actions{width:100%;justify-content:flex-start!important;margin-inline-start:0!important;margin-top:10px!important}
-    #labflowThemeToggle,#topLogoutBtn{height:36px!important}
-  }
-}
-</style>
-
-<script id="labflow-final-print-and-theme-actions-fix">
-/* Final print builder: no tables, no columns, and tests grouped by their section names */
-(function(){
-  if(window.__LABFLOW_FINAL_DARK_PRINT_SECTION_FIX__) return;
-  window.__LABFLOW_FINAL_DARK_PRINT_SECTION_FIX__ = true;
-
-  function $(id){return document.getElementById(id);}
-  function safe(v){
-    return String(v == null ? '' : v).replace(/[&<>"']/g,function(m){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-    });
-  }
-  function autoDir(v){return /[\u0600-\u06FF]/.test(String(v||''))?'rtl':'ltr';}
-  function norm(v){return String(v||'').toLowerCase().replace(/[إأآا]/g,'ا').replace(/[ة]/g,'ه').replace(/[\s._\-\/:]+/g,' ').trim();}
-  function labObj(){try{return window.lab || lab || {}}catch(e){return window.lab || {}}}
-  function unitOf(it){try{if(typeof labflowUnitForItem==='function') return labflowUnitForItem(it)||'';}catch(e){} return (it&& (it.unit||it.units||it.testUnit)) || '';}
-  function rangeOf(it){try{if(typeof labflowNormalRangeForItem==='function') return labflowNormalRangeForItem(it)||'-';}catch(e){} return (it&&(it.normalRange||it.range||it.ref||it.reference)) || '-';}
-  function resultDate(o){
-    var d = new Date((o&& (o.resultedAt||o.createdAt)) || Date.now());
-    if(isNaN(d)) d = new Date();
-    try{return d.toLocaleString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}catch(e){return d.toISOString().slice(0,16).replace('T',' ');}
-  }
-  function fileTitle(o){
-    try{ if(typeof resultFileName==='function') return resultFileName(o,'html'); }catch(e){}
-    return ((o&&o.patientName)||'Lab Result') + '.html';
-  }
-  function cleanSection(raw){
-    var c = String(raw || '').trim().replace(/^\s*\d+\s*[-–—:.]*\s*/,'').trim();
-    if(!c) return '';
-    return c.replace(/^قسم\s+/,'').trim();
-  }
-  function sectionName(raw,it){
-    var all = norm([raw,it&&it.category,it&&it.name,it&&it.enName,it&&it.formType].filter(Boolean).join(' '));
-    var c = cleanSection(raw || (it&&it.category) || '');
-    if(/cbc|complete blood|hematology|haematology|دمويات|دم|صوره الدم|صورة الدم/.test(all)) return 'قسم الدمويات';
-    if(/hormone|hormones|هرمون|هرمونات/.test(all)) return 'قسم الهرمونات';
-    if(/chem|biochem|كيمياء|كيميا|سكر|سكري|كلية|كلى|كبد|وظائف/.test(all)) return 'قسم الكيمياء';
-    if(/immun|serology|مناعة|مناعي|فيروس|فايروس|التهاب/.test(all)) return 'قسم المناعة';
-    if(/urine|urinalysis|gue|ادرار|ادرار|بول/.test(all)) return 'قسم الإدرار';
-    if(/stool|gse|براز|خروج/.test(all)) return 'قسم الخروج';
-    if(/lipid|دهون|شحوم|كوليسترول|cholesterol|triglyceride/.test(all)) return 'قسم الدهون';
-    if(/electrolyte|electrolytes|املاح|أملاح|صوديوم|بوتاسيوم/.test(all)) return 'قسم الأملاح';
-    if(/coag|ptt|inr|تخثر|سيوله|سيولة/.test(all)) return 'قسم التخثر';
-    return c ? (/^قسم/.test(c) ? c : 'قسم ' + c) : 'قسم التحاليل العامة';
-  }
-  function kindOf(it){
-    var s=norm([it&&it.formType,it&&it.kind,it&&it.type,it&&it.name,it&&it.enName,it&&it.category].filter(Boolean).join(' '));
-    if(/cbc|complete blood|صوره الدم|صورة الدم|دم كامل|تعداد الدم/.test(s)) return 'cbc';
-    if(/urine|gue|ادرار|بول/.test(s)) return 'urine';
-    if(/stool|gse|براز|خروج/.test(s)) return 'stool';
-    return '';
-  }
-  var CBC_FIELDS=[
-    ['wbc','WBC','10^3/µL','4.0 - 11.0'],['lym','LYM%','%','20 - 40'],['mid','MID%','%','3 - 10'],['gran','GRAN%','%','50 - 70'],
-    ['rbc','RBC','10^6/µL','4.2 - 5.8'],['hgb','HGB','g/dL','12 - 17'],['hct','HCT / PCV','%','36 - 50'],['mcv','MCV','fL','80 - 100'],
-    ['mch','MCH','pg','27 - 33'],['mchc','MCHC','g/dL','32 - 36'],['rdw','RDW-CV','%','11.5 - 14.5'],['plt','PLT','10^3/µL','150 - 450'],
-    ['mpv','MPV','fL','7 - 11'],['pdw','PDW','%','9 - 17'],['pct','PCT','%','0.10 - 0.50']
-  ];
-  function parsePairs(str){
-    var out={};
-    String(str||'').split(/[;\n|]+/).forEach(function(part){
-      var i=part.indexOf(':'); if(i<1) i=part.indexOf('=');
-      if(i<1) return;
-      var k=norm(part.slice(0,i)).replace(/[^a-z0-9\u0600-\u06ff]+/g,'');
-      var v=part.slice(i+1).trim();
-      if(k) out[k]=v;
-    });
-    return out;
-  }
-  function cbcData(it){
-    var src=Object.assign({},parsePairs(it&&it.result),(it&&it.formData)||{},(it&&it.cbcData)||{});
-    var aliases={wbc:['wbc','whitebloodcells'],lym:['lym','lym%','lymph'],mid:['mid','mid%'],gran:['gran','gran%'],rbc:['rbc'],hgb:['hgb','hb','hemoglobin'],hct:['hct','pcv','hctpcv','hematocrit'],mcv:['mcv'],mch:['mch'],mchc:['mchc'],rdw:['rdw','rdwcv'],plt:['plt','platelet','platelets'],mpv:['mpv'],pdw:['pdw'],pct:['pct']};
-    var out={};
-    Object.keys(aliases).forEach(function(k){
-      for(var i=0;i<aliases[k].length;i++){
-        var a=norm(aliases[k][i]).replace(/[^a-z0-9\u0600-\u06ff]+/g,'');
-        if(src[a] != null && String(src[a]).trim()){out[k]=src[a];break;}
-        if(src[aliases[k][i]] != null && String(src[aliases[k][i]]).trim()){out[k]=src[aliases[k][i]];break;}
-      }
-    });
-    return out;
-  }
-  function specialPairs(it,type){
-    var raw=Object.assign({},parsePairs(it&&it.result),(it&&it.formData)||{});
-    function pick(){
-      for(var i=0;i<arguments.length;i++){
-        var k=arguments[i], nk=norm(k).replace(/[^a-z0-9\u0600-\u06ff]+/g,'');
-        if(raw[k] != null && String(raw[k]).trim()) return raw[k];
-        if(raw[nk] != null && String(raw[nk]).trim()) return raw[nk];
-      }
-      return '';
-    }
-    if(type==='urine') return [['Color',pick('color')],['Appearance',pick('appearance')],['Specific Gravity',pick('sg','specific gravity','specificgravity')],['pH',pick('ph')],['Protein',pick('protein')],['Glucose',pick('glucose')],['Ketone',pick('ketone')],['Bilirubin',pick('bilirubin')],['Urobilinogen',pick('urobilinogen')],['Nitrite',pick('nitrite')],['Leukocytes',pick('leukocytes')],['Blood / Hb',pick('blood','bloodhb')],['Pus Cells',pick('pus','pus cells','puscells')],['RBC',pick('rbc')],['Epithelial Cells',pick('epi','epithelial cells')],['Crystals',pick('crystals')],['Casts',pick('casts')],['Bacteria',pick('bacteria')],['Yeast',pick('yeast')],['Notes',(it&&it.note)||pick('notes','extra')]];
-    return [['Color',pick('color')],['Consistency',pick('consistency')],['Mucus',pick('mucus')],['Blood',pick('blood')],['Pus Cells',pick('pus','pus cells','puscells')],['RBC',pick('rbc')],['Ova / Cyst',pick('ova','ova cyst','ovacyst')],['Parasites',pick('parasites')],['Undigested Food',pick('food','undigested food')],['Fat Globules',pick('fat','fat globules')],['Occult Blood',pick('occult','occult blood')],['H. pylori Ag',pick('hpylori','h pylori ag')],['Notes',(it&&it.note)||pick('notes','extra')]];
-  }
-  function line(label,value,unit,range,abn){
-    value = (value == null || String(value).trim()==='') ? '-' : value;
-    var meta=[];
-    if(unit) meta.push(unit);
-    if(range && range !== '-') meta.push('Normal Range: '+range);
-    return '<div class="lfp-line '+(abn?'is-abn':'')+'"><b>'+safe(label)+'</b><strong dir="auto">'+safe(value)+'</strong>'+(meta.length?'<small>'+safe(meta.join('  •  '))+'</small>':'')+'</div>';
-  }
-  function testCard(it,index){
-    it=it||{}; var kind=kindOf(it), flag=String(it.flag||'normal').toLowerCase(), abn=(flag==='high'||flag==='low');
-    var title=safe(it.enName||it.name||it.testName||it.title||'-');
-    var sub=(it.enName && it.name && it.enName!==it.name)?'<small dir="'+autoDir(it.name)+'">'+safe(it.name)+'</small>':'';
-    var body='';
-    if(kind==='cbc'){
-      var d=cbcData(it);
-      body = CBC_FIELDS.map(function(f){return line(f[1],d[f[0]],f[2],f[3],false)}).join('');
-    }else if(kind==='urine'||kind==='stool'){
-      var pairs=specialPairs(it,kind).filter(function(p){return String(p[1] == null ? '' : p[1]).trim() && String(p[1]).trim() !== '-';});
-      if(!pairs.length) pairs=specialPairs(it,kind);
-      body = pairs.map(function(p){return line(p[0],p[1]||'-','','',false)}).join('');
-    }else{
-      body = line('Result',(it.result||'-')+(flag==='high'?' H':flag==='low'?' L':''),unitOf(it),rangeOf(it),abn);
-      if(it.note && String(it.note).trim()) body += line('Note',it.note,'','',abn);
-    }
-    return '<article class="lfp-test-card">'+
-      '<div class="lfp-test-title"><span>'+(index+1)+'</span><div><h3 dir="auto">'+title+'</h3>'+sub+'</div></div>'+
-      '<div class="lfp-result-list">'+body+'</div>'+
-    '</article>';
-  }
-  function groupItems(items){
-    var groups=[], map={};
-    (items||[]).forEach(function(it,i){
-      var cat=sectionName(it&&it.category,it);
-      if(!map[cat]){map[cat]={cat:cat,rows:[]};groups.push(map[cat]);}
-      map[cat].rows.push({it:it||{},index:i});
-    });
-    return groups;
-  }
-  function buildHtml(o,tpl,autoPrint){
-    o=o||{}; var L=labObj(), settings=L.settings||{}, theme=L.theme||{};
-    var a=theme.primary||'#0ea5e9', b=theme.secondary||'#10b981';
-    var groups=groupItems(Array.isArray(o.items)?o.items:[]);
-    var sections=groups.map(function(g){
-      return '<section class="lfp-section"><h2>'+safe(g.cat)+'</h2>'+g.rows.map(function(x){return testCard(x.it,x.index)}).join('')+'</section>';
-    }).join('') || '<section class="lfp-section"><h2>قسم التحاليل العامة</h2><div class="lfp-empty">لا توجد تحاليل في هذا الطلب.</div></section>';
-    var logo='';
-    try{ if(typeof currentLogo==='function') logo=currentLogo(); }catch(e){}
-    if(!logo && L.logo) logo=L.logo;
-    var logoHtml=logo?'<img class="lfp-logo" src="'+safe(logo)+'" alt="logo">':'<div class="lfp-logo lfp-logo-fallback">LF</div>';
-    var css='<style>'+
-      '@page{size:A4;margin:10mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{background:#fff;color:#0f172a;font-family:Arial,Tahoma,"Segoe UI",sans-serif;direction:rtl;-webkit-print-color-adjust:exact;print-color-adjust:exact}.lfp-page{min-height:100vh;background:#fff;position:relative;padding:0}.lfp-ribbon{height:6mm;background:linear-gradient(90deg,'+a+','+b+')}'+
-      '.lfp-header{padding:9mm 8mm 6mm;border-bottom:1px solid #dbe7f2;background:linear-gradient(180deg,#fbfdff,#fff);display:flex;align-items:center;justify-content:space-between;gap:8mm}.lfp-brand{display:flex;align-items:center;gap:5mm}.lfp-logo{width:22mm;height:22mm;border-radius:6mm;object-fit:cover}.lfp-logo-fallback{display:grid;place-items:center;background:linear-gradient(135deg,'+a+','+b+');color:#fff;font-weight:900}.lfp-brand h1{margin:0;font-size:22pt;color:#0f172a}.lfp-brand p{margin:2mm 0 0;color:#64748b;font-size:9.5pt}.lfp-badge{text-align:left;direction:ltr}.lfp-badge b{display:block;color:'+a+';font-size:15pt}.lfp-badge span{display:block;color:#64748b;font-size:9pt;margin-top:1mm}.lfp-title{margin:5mm 8mm 0;padding:4mm;border:1px solid #dbe7f2;border-radius:5mm;background:#f8fbff;text-align:center}.lfp-title b{font-size:15pt;color:#0f172a}.lfp-info{margin:4mm 8mm 5mm}.lfp-info-row{border:1px solid #e2edf7;border-radius:4mm;padding:2.6mm 3mm;margin-bottom:2mm;background:#fff}.lfp-info-row span{display:block;color:#64748b;font-size:8.8pt;font-weight:700;margin-bottom:1mm}.lfp-info-row b{display:block;color:#0f172a;font-size:11pt}.lfp-section{margin:0 8mm 5mm;break-inside:avoid}.lfp-section h2{margin:0 0 3mm;padding:3mm 4mm;border-radius:4mm;background:linear-gradient(135deg,'+a+','+b+');color:#fff;font-size:14pt}.lfp-test-card{border:1px solid #dbe7f2;border-radius:4mm;background:#fff;padding:3mm 3.5mm;margin-bottom:3mm;break-inside:avoid;box-shadow:0 2mm 6mm rgba(15,65,110,.06)}.lfp-test-title{display:flex;align-items:flex-start;gap:3mm;margin-bottom:2.5mm}.lfp-test-title span{min-width:8mm;height:8mm;border-radius:50%;display:grid;place-items:center;background:#eef7ff;color:'+a+';font-weight:900;font-size:9pt}.lfp-test-title h3{margin:0;color:#0f172a;font-size:12.5pt;line-height:1.35}.lfp-test-title small{display:block;color:#64748b;font-size:8.5pt;margin-top:1mm}.lfp-result-list{display:block}.lfp-line{display:block;border:1px solid #e8f1fa;border-radius:3.5mm;background:#fbfdff;padding:2.6mm 3mm;margin-top:2mm}.lfp-line b{display:block;color:#64748b;font-size:8.5pt;margin-bottom:1mm}.lfp-line strong{display:block;color:#0f172a;font-size:13pt;line-height:1.3}.lfp-line small{display:block;color:#64748b;font-size:8pt;margin-top:1mm}.lfp-line.is-abn strong{color:#dc2626!important}.lfp-note{margin:5mm 8mm 0;padding:3mm 4mm;border:1px dashed #cbd5e1;border-radius:4mm;color:#475569;background:#f8fafc;font-size:9pt;line-height:1.8}.lfp-foot{margin:8mm 8mm 0;padding-top:4mm;border-top:1px solid #dbe7f2;display:flex;justify-content:space-between;align-items:flex-end;gap:6mm}.lfp-stamp{width:35mm;height:20mm;border:2px dashed '+a+';border-radius:5mm;color:'+a+';display:grid;place-items:center;font-weight:900}.lfp-sign{text-align:center;min-width:45mm;color:#0f172a}.lfp-empty{padding:6mm;border:1px dashed #cbd5e1;border-radius:4mm;text-align:center;color:#64748b}.lfp-water{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.035;font-size:56pt;font-weight:900;color:#0f172a;transform:rotate(-18deg)}@media print{body{background:#fff}.lfp-test-card,.lfp-section{break-inside:avoid}.lfp-page{padding:0}.no-print{display:none!important}}'+
-    '</style>';
-    var printScript=autoPrint?'<script>window.addEventListener("load",function(){setTimeout(function(){try{window.focus();window.print();}catch(e){}},350);});<\/script>':'';
-    return '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+safe(fileTitle(o))+'</title>'+css+'</head><body><main class="lfp-page"><div class="lfp-water">'+safe(L.name||'LabFlow')+'</div><div class="lfp-ribbon"></div><header class="lfp-header"><div class="lfp-brand">'+logoHtml+'<div><h1>'+safe(L.name||'مختبر')+'</h1><p>'+safe(L.address||'')+(L.phone?' | '+safe(L.phone):'')+'</p></div></div><div class="lfp-badge"><b>'+safe(o.orderNo||'')+'</b><span>'+safe(resultDate(o))+'</span></div></header><div class="lfp-title"><b>'+safe(settings.reportTitle||'تقرير فحص مختبري')+'</b></div><section class="lfp-info"><div class="lfp-info-row"><span>اسم المريض</span><b>'+safe(o.patientName||'-')+'</b></div><div class="lfp-info-row"><span>العمر / الجنس</span><b>'+safe(o.patientAge||'-')+' / '+safe(o.patientGender||'-')+'</b></div><div class="lfp-info-row"><span>الطبيب المحول</span><b>'+safe(o.doctor||'-')+'</b></div><div class="lfp-info-row"><span>الهاتف</span><b>'+safe(o.patientPhone||'-')+'</b></div></section>'+sections+'<div class="lfp-note">'+safe(settings.footerNote||'مع تمنياتنا لكم بالصحة والسلامة')+'<br>ملاحظة: يتم اعتماد الـ Normal Range حسب جهاز المختبر والكِت المستخدم.</div><footer class="lfp-foot"><div class="lfp-stamp">ختم المختبر</div><div class="lfp-sign"><b>'+safe(settings.signature||'Lab Specialist')+'</b><br><span>التوقيع والمصادقة</span></div></footer></main>'+printScript+'</body></html>';
-  }
-
-  window.buildResultPrintHtml=function(order,tpl,autoPrint){return buildHtml(order,tpl,autoPrint);};
-  try{buildResultPrintHtml=window.buildResultPrintHtml;}catch(e){}
-
-  function installTopThemeButton(){
-    var btn=$('labflowThemeToggle');
-    var logout=$('topLogoutBtn') || $('logoutBtn');
-    var bar=document.querySelector('.topbar');
-    if(!btn || !bar) return;
-    var wrap=$('labflowTopActions');
-    if(!wrap){
-      wrap=document.createElement('div');
-      wrap.id='labflowTopActions';
-      wrap.className='lf-top-actions';
-      bar.appendChild(wrap);
-    }
-    wrap.appendChild(btn);
-    if(logout) wrap.appendChild(logout);
-    updateThemeButtonLabel();
-  }
-  function currentMode(){
-    return document.documentElement.classList.contains('lf-theme-dark') ? 'dark' : 'light';
-  }
-  function updateThemeButtonLabel(){
-    var btn=$('labflowThemeToggle');
-    if(!btn) return;
-    var dark=currentMode()==='dark';
-    btn.innerHTML=dark?'☀️ لايت':'🌙 دارك';
-    btn.title=dark?'تبديل إلى لايت مود':'تبديل إلى دارك مود';
-  }
-  function bindTheme(){
-    var btn=$('labflowThemeToggle');
-    if(!btn || btn.__lfFinalThemeBound) return;
-    btn.__lfFinalThemeBound=true;
-    btn.onclick=function(){
-      var next=currentMode()==='dark'?'light':'dark';
-      try{localStorage.setItem('labflow_theme_mode',next);}catch(e){}
-      document.documentElement.classList.remove('lf-theme-light','lf-theme-dark');
-      document.documentElement.classList.add(next==='dark'?'lf-theme-dark':'lf-theme-light');
-      updateThemeButtonLabel();
-    };
-  }
-  function initUi(){
-    installTopThemeButton();
-    bindTheme();
-    updateThemeButtonLabel();
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initUi); else initUi();
-  setTimeout(initUi,250);
-  setTimeout(initUi,1000);
-})();
-</script>
-<!-- LABFLOW_FINAL_DARK_PRINT_SECTION_FIX_END -->
-
 </body></html>`;const w=window.open('','_blank','width=720,height=700');w.document.write(html);w.document.close();}function delDoc(c,id){if(!confirm('تأكيد الحذف؟'))return;if(c==='patients')patients=patients.filter(x=>x.id!==id);if(c==='tests')tests=tests.filter(x=>x.id!==id);if(c==='orders')orders=orders.filter(x=>x.id!==id);save();msg('ok','تم الحذف');renderAll();}function renderOrderForm(){if($('oDate')&&!$('oDate').value)$('oDate').value=todayKey();const cats=categories();const catSel=$('oCategory');const prev=catSel?catSel.value:'';if(catSel){catSel.innerHTML='<option value="">كل الأقسام</option>'+cats.map(c=>`<option value="${esc(c)}">${esc(c)} — ${tests.filter(t=>(t.category||'غير مصنف')===c).length} تحليل</option>`).join('');catSel.value=cats.includes(prev)?prev:'';}updateRegClock();renderOrderTests();}let orderMode='all';function setOrderMode(mode){orderMode=mode||'all';$('tabAllTests')?.classList.toggle('active',orderMode==='all');$('tabByCat')?.classList.toggle('active',orderMode==='category');$('oCategory')?.classList.toggle('focus-glow',orderMode==='category');renderOrderTests();}function updateRegClock(){if($('regDateText'))$('regDateText').textContent=new Date().toLocaleDateString('ar-IQ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});if($('regTimeText'))$('regTimeText').textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});}setInterval(updateRegClock,30000);function chooseGender(g){if($('oGender'))$('oGender').value=g;document.querySelectorAll('.gender-btn').forEach(b=>b.classList.toggle('active',b.dataset.gender===g));renderSelectedSummary();}function visibleOrderTests(){const term=($('oTestSearch')?.value||'').toLowerCase().trim();const cat=($('oCategory')?.value||'');let rows=[...tests];if(orderMode==='category'&&cat)rows=rows.filter(t=>(t.category||'غير مصنف')===cat);if(orderMode==='category'&&!cat){const first=categories()[0]||'';if(first){$('oCategory').value=first;rows=rows.filter(t=>(t.category||'غير مصنف')===first);}}if(term)rows=rows.filter(t=>((t.name||'')+' '+(t.enName||'')+' '+(t.category||'')+' '+(t.normalRange||'')).toLowerCase().includes(term));return rows.sort((a,b)=>String(a.category||'').localeCompare(String(b.category||''),'ar')||String(a.name||'').localeCompare(String(b.name||''),'en'));}function renderOrderTests(){const cats=categories();const activeCat=$('oCategory')?.value||'';if($('orderCategoryPills')){$('orderCategoryPills').innerHTML=cats.map(c=>`<button type="button" class="cat-btn ${c===activeCat && orderMode==='category'?'active':''}" onclick="setOrderMode('category'); $('oCategory').value='${escAttr(c)}'; renderOrderTests();">${esc(c)} <span class="muted">(${tests.filter(t=>(t.category||'غير مصنف')===c).length})</span></button>`).join('');}const rows=visibleOrderTests();if($('visibleTestsCount'))$('visibleTestsCount').textContent='المعروض: '+rows.length+' / الكل: '+tests.length+' — المختار: '+orderSelectedIds.size;if(!$('testChecks'))return;$('testChecks').innerHTML=rows.map(t=>`<tr class="pick-row ${orderSelectedIds.has(t.id)?'selected':''}" onclick="if(event.target.tagName!=='INPUT') toggleOrderTest('${t.id}', !orderSelectedIds.has('${t.id}'))"><td><input type="checkbox" value="${t.id}" ${orderSelectedIds.has(t.id)?'checked':''} onchange="toggleOrderTest('${t.id}', this.checked)"></td><td><b>${esc(t.name)}</b><br><small>${esc(t.enName||'')}</small></td><td><span class="tiny-cat">${esc(t.category||'-')}</span></td><td class="price-cell">${money(t.price)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty-order">لا توجد تحاليل مطابقة للبحث أو القسم.</td></tr>';calcOrder();}function escAttr(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]));}function setOrderCategory(cat){if($('oCategory'))$('oCategory').value=cat;if($('oTestSearch'))$('oTestSearch').value='';setOrderMode('category');}function toggleOrderTest(id,checked){if(checked)orderSelectedIds.add(id);else orderSelectedIds.delete(id);calcOrder();renderOrderTests();}function addAllVisibleTests(){visibleOrderTests().forEach(t=>orderSelectedIds.add(t.id));calcOrder();renderOrderTests();}function clearSelectedTests(){orderSelectedIds.clear();calcOrder();renderOrderTests();}function selectedTests(){return tests.filter(t=>orderSelectedIds.has(t.id));}function normalRangeFor(t){const gender=$('oGender')?.value||'ذكر';const unit=$('oAgeUnit')?.value||'سنة';const age=Number($('oAge')?.value)||0;const child=unit!=='سنة'||age<13;const name=((t.name||'')+' '+(t.enName||'')).toLowerCase();const cat=(t.category||'').toLowerCase();if(cat.includes('بول')||cat.includes('براز'))return t.normalRange||'-';if(name.includes('hemoglobin')||name==='hb'||name.includes(' hb '))return child?'11.0 - 14.5':(gender==='ذكر'?'13.5 - 17.5':'12.0 - 15.5');if(name.includes('hematocrit')||name.includes('hct')||name.includes('pcv'))return child?'33 - 43':(gender==='ذكر'?'41 - 53':'36 - 46');if(/(^| )rbc($| )|red blood/.test(name))return child?'4.0 - 5.2':(gender==='ذكر'?'4.5 - 5.9':'4.1 - 5.1');if(name.includes('wbc')||name.includes('white blood'))return child?'5.0 - 14.5':'4.0 - 11.0';if(name.includes('creatinine'))return child?'0.3 - 0.7':(gender==='ذكر'?'0.74 - 1.35':'0.59 - 1.04');if(name.includes('uric'))return gender==='ذكر'?'3.4 - 7.0':'2.4 - 6.0';if(name.includes('ferritin'))return gender==='ذكر'?'24 - 336':'11 - 307';if(name.includes('esr'))return gender==='ذكر'?'0 - 15':'0 - 20';if(name.includes('hdl'))return gender==='ذكر'?'> 40':'> 50';if(name.includes('psa'))return gender==='أنثى'?'خاص بالذكور':(age<40?'< 2.5':age<50?'< 3.5':age<60?'< 4.5':'< 6.5');if(name.includes('testosterone'))return gender==='ذكر'?'300 - 1000':'15 - 70';if(name.includes('prolactin'))return gender==='ذكر'?'2 - 18':'4 - 23';if(name.includes('alkaline phosphatase')||name.includes('alp'))return child?'150 - 420':'40 - 130';if(name.includes('tsh'))return child?'0.7 - 6.4':'0.4 - 4.0';return t.normalRange||'-';}function renderSelectedSummary(){const arr=selectedTests();if($('selectedTestsBox'))$('selectedTestsBox').innerHTML=arr.length?arr.map(t=>`<span class="selected-tag">${esc(t.name)} <button type="button" onclick="orderSelectedIds.delete('${t.id}'); renderOrderTests();">×</button></span>`).join(''):'<span class="muted">ماكو تحاليل مختارة حالياً.</span>';if($('visibleTestsCount'))$('visibleTestsCount').textContent='المختار: '+orderSelectedIds.size+' تحليل';if($('selectedOrderRows'))$('selectedOrderRows').innerHTML=arr.length?arr.map(t=>`<tr><td><b>${esc(t.name)}</b><br><small>${esc(t.enName||'')}</small></td><td><input class="mini-result" placeholder="لاحقاً"></td><td><b>${esc(normalRangeFor(t))}</b><br><small class="muted">حسب العمر والجنس</small></td><td>${esc(t.unit||'')}</td><td><input class="mini-result" placeholder="ملاحظة"></td></tr>`).join(''):'<tr><td colspan="5" class="empty-order">لم يتم إضافة أي تحاليل بعد<br><span>اختر التحاليل من القائمة لإضافتها هنا</span></td></tr>';}function calcOrder(){const discount=Number($('oDiscount')?.value)||0;const total=Math.max(selectedTests().reduce((s,t)=>s+(Number(t.price)||0),0)-discount,0);const paid=Number($('oPaid')?.value)||0;if($('oTotal'))$('oTotal').value=total;if($('oRemain'))$('oRemain').value=Math.max(total-paid,0);renderSelectedSummary();}$('oPaid')?.addEventListener('input',calcOrder);$('oDiscount')?.addEventListener('input',calcOrder);$('oAge')?.addEventListener('input',renderSelectedSummary);$('oAgeUnit')?.addEventListener('change',renderSelectedSummary);$('orderForm').onsubmit=e=>{e.preventDefault();const patientName=($('oName')?.value||'').trim();if(!patientName)return msg('err','اكتب اسم المريض');const items=selectedTests().map(t=>({testId:t.id,name:t.name,enName:t.enName||'',category:t.category||'',normalRange:normalRangeFor(t),unit:t.unit||'',price:Number(t.price)||0,formType:t.formType||'',result:'',note:''}));if(!items.length)return msg('err','اختر تحليل واحد على الأقل');let p=patients.find(x=>(x.name||'').trim()===patientName&&String(x.age||'')===String($('oAge')?.value||''));if(!p){p={id:makeId('p'),name:patientName,age:$('oAge')?.value||'',ageUnit:$('oAgeUnit')?.value||'سنة',gender:$('oGender')?.value||'ذكر',phone:'',doctor:$('oDoctor')?.value||'',notes:'',createdAt:nowIso()};patients.unshift(p);}else{p.age=$('oAge')?.value||p.age;p.gender=$('oGender')?.value||p.gender;p.doctor=$('oDoctor')?.value||p.doctor;}const total=Number($('oTotal')?.value)||0,paid=Number($('oPaid')?.value)||0;const orderNo=($('oCode')?.value||'').trim()||('LF-'+Date.now().toString().slice(-7));orders.unshift({id:makeId('o'),orderNo,dateKey:$('oDate')?.value||todayKey(),patientId:p.id,patientName:p.name,patientAge:p.age||'',patientGender:p.gender||'',patientPhone:p.phone||'',doctor:$('oDoctor')?.value||p.doctor||'',items,total,paid,remain:Math.max(total-paid,0),discount:Number($('oDiscount')?.value)||0,notes:$('oNotes')?.value||'',status:'new',createdAt:nowIso()});save();$('orderForm').reset();if($('oDate'))$('oDate').value=todayKey();chooseGender('ذكر');orderSelectedIds.clear();msg('ok','تم حفظ الطلب رقم '+orderNo);renderAll();showSec('results');};function templateNames(){return {classic:'رسمي عريض',executive:'Executive Premium',modern:'مودرن ملون',hospital:'Hospital Clean',gold:'ذهبي فاخر',labline:'Lab Line',minimal:'Minimal White',bilingual:'عربي / English',compact:'Compact A5',economy:'اقتصادي نظيف'};}function setTemplate(t){selectedTemplate=t;$('tplName').textContent=templateNames()[t]||t;document.querySelectorAll('.template-card').forEach(c=>c.classList.toggle('active',c.dataset.template===t));}function quickPrint(id){$('printOrder').value=id;showSec('print');printSelected();}function printSelected(){const o=orders.find(x=>x.id===$('printOrder').value);if(!o)return msg('err','اختر طلب للطباعة');printReport(o,selectedTemplate);}function initials(name){return (String(name||'LabFlow').trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2)||'LF').toUpperCase();}function svgSafe(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}function generatedLogoDataUri(name){const txt=svgSafe(initials(name));const full=svgSafe(name||'LabFlow');const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#19d184"/><stop offset=".55" stop-color="#48b7ff"/><stop offset="1" stop-color="#9b7bff"/></linearGradient><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#06111e" flood-opacity=".25"/></filter></defs><rect x="18" y="18" width="204" height="204" rx="58" fill="url(#g)" filter="url(#s)"/><circle cx="184" cy="58" r="24" fill="rgba(255,255,255,.24)"/><path d="M42 164 C82 128, 116 198, 198 118" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="12" stroke-linecap="round"/><text x="120" y="132" text-anchor="middle" dominant-baseline="middle" font-family="Arial,Tahoma,sans-serif" font-size="64" font-weight="900" fill="#06111e">${txt}</text><text x="120" y="184" text-anchor="middle" font-family="Arial,Tahoma,sans-serif" font-size="17" font-weight="700" fill="rgba(6,17,30,.72)">${full.slice(0,18)}</text></svg>`;return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);}function currentLogo(){return lab.logo||generatedLogoDataUri(lab.name||'LabFlow');}function logoHtml(size=84){return `<img src="${currentLogo()}" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:22px">`;}function updateAppLogo(){const l=document.querySelector('.logo');if(l){l.innerHTML=`<img src="${currentLogo()}" alt="logo">`;}const a=document.querySelector('.avatar');if(a){a.innerHTML=initials(lab.name||'LabFlow').slice(0,1);}}function tplConfig(tpl){const map={classic:{accent:'#0f5b8c',soft:'#eef7ff',text:'#101828',border:'#1f2937',page:'A4',margin:'11mm'},executive:{accent:'#13233b',soft:'#e8eef8',text:'#0b1220',border:'#121826',page:'A4',margin:'10mm'},modern:{accent:'#0ea5e9',soft:'#ecfeff',text:'#0f172a',border:'#155e75',page:'A4',margin:'11mm'},hospital:{accent:'#009688',soft:'#e9fff8',text:'#10201d',border:'#0f766e',page:'A4',margin:'12mm'},gold:{accent:'#b7791f',soft:'#fff7e6',text:'#1c1406',border:'#8a5a14',page:'A4',margin:'11mm'},labline:{accent:'#6d5dfc',soft:'#f2f0ff',text:'#111827',border:'#5145cd',page:'A4',margin:'10mm'},minimal:{accent:'#334155',soft:'#f8fafc',text:'#0f172a',border:'#cbd5e1',page:'A4',margin:'12mm'},bilingual:{accent:'#075985',soft:'#eff6ff',text:'#0f172a',border:'#0c4a6e',page:'A4',margin:'11mm'},compact:{accent:'#047857',soft:'#f0fdf4',text:'#0f172a',border:'#064e3b',page:'A5',margin:'8mm'},economy:{accent:'#111827',soft:'#ffffff',text:'#111827',border:'#111827',page:'A4',margin:'12mm'}};return map[tpl]||map.classic;}function printReport(o,tpl){const settings=lab.settings||{},cfg=tplConfig(tpl),bi=(tpl==='bilingual');const compact=(tpl==='compact');const rows=(o.items||[]).map((it,i)=>`<tr><td>${i+1}</td><td class="test-name"><b>${esc(it.name)}</b>${(bi||tpl==='executive')?'<br><small>'+esc(it.enName||'')+'</small>':''}</td><td class="result"><b>${esc(it.result||'-')}</b></td><td>${esc(it.unit||'')}</td><td>${esc(it.normalRange||'-')}</td><td>${esc(it.note||'')}</td></tr>`).join('');const css=`<style>@page{size:${cfg.page};margin:${cfg.margin}}*{box-sizing:border-box}body{font-family:Arial,Tahoma,sans-serif;direction:rtl;color:${cfg.text};margin:0;background:#fff}.page{min-height:100vh;position:relative;overflow:hidden}.water{position:fixed;inset:0;display:grid;place-items:center;opacity:${tpl==='economy'?'.025':'.045'};font-size:${compact?'48px':'88px'};font-weight:900;pointer-events:none;transform:rotate(-18deg)}.top-ribbon{height:${compact?'7px':'12px'};background:linear-gradient(90deg,${cfg.accent},#38bdf8,#19d184)}.head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:${compact?'12px 12px 8px':'18px 18px 14px'};border-bottom:2px solid ${cfg.border};background:${cfg.soft}}.lab-title h1{margin:0;font-size:${compact?'20px':'30px'};letter-spacing:-.5px}.lab-title p{margin:5px 0 0;color:#475569;font-size:${compact?'11px':'13px'}}.report-badge{background:${cfg.accent};color:white;border-radius:999px;padding:7px 14px;font-weight:800;display:inline-block;margin-top:8px;font-size:${compact?'11px':'13px'}}.info{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:${compact?'10px 12px':'16px 18px'}}.box{border:1px solid ${cfg.border};border-radius:${tpl==='economy'?'0':'12px'};padding:${compact?'7px':'9px'};background:white;min-height:48px}.box span{display:block;font-size:11px;color:#64748b;margin-bottom:4px}.box b{font-size:${compact?'12px':'14px'}}table{width:calc(100% - ${compact?'24px':'36px'});margin:${compact?'8px 12px':'12px 18px'};border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid ${cfg.border};border-radius:${tpl==='economy'?'0':'12px'}}th,td{padding:${compact?'7px':'10px'};text-align:center;border-bottom:1px solid #d7dee8;border-left:1px solid #e5e7eb;font-size:${compact?'11px':'13px'}}th{background:${cfg.accent};color:white;font-size:${compact?'10px':'12px'};letter-spacing:.2px}.test-name{text-align:right}.test-name small{color:#64748b}.result b{font-size:${compact?'13px':'16px'};color:${cfg.accent}}tr:nth-child(even) td{background:${tpl==='economy'?'#fff':'#f8fbff'}}tr:last-child td{border-bottom:0}.foot{display:flex;justify-content:space-between;align-items:flex-end;margin:${compact?'12px':'22px'} ${compact?'12px':'18px'} 0;border-top:1px dashed #94a3b8;padding-top:12px}.sign{min-width:160px;text-align:center}.stamp{width:${compact?'82px':'115px'};height:${compact?'52px':'70px'};border:2px dashed ${cfg.accent};border-radius:14px;display:grid;place-items:center;color:${cfg.accent};font-weight:900}.note{margin:${compact?'8px 12px':'14px 18px'} 0;color:#475569;font-size:${compact?'10px':'12px'}}.side-line{position:absolute;top:0;bottom:0;right:0;width:${tpl==='labline'?'18px':'0'};background:linear-gradient(${cfg.accent},#38bdf8)}.executive-block{display:${tpl==='executive'||tpl==='gold'?'block':'none'};position:absolute;left:-80px;top:-80px;width:220px;height:220px;border-radius:50%;background:${cfg.accent};opacity:.12}.mini{font-size:10px;color:#64748b;margin-top:2px}@media print{button{display:none}}
 .cat-row td{background:linear-gradient(90deg,rgba(25,209,132,.22),rgba(72,183,255,.08));border-top:2px solid rgba(25,209,132,.35);font-weight:900;color:#dfffee;padding:12px!important}
 .cat-mini{display:flex;align-items:center;justify-content:space-between;gap:10px}.cat-mini span{font-size:12px;color:var(--muted);font-weight:700}.range-note{font-size:11px;color:#a9bad3;margin-top:4px}.order-cat{grid-column:1/-1;border:1px solid var(--line);border-radius:16px;background:rgba(10,22,38,.65);overflow:hidden}.order-cat-head{padding:10px 12px;background:rgba(25,209,132,.10);border-bottom:1px solid var(--line);font-weight:900;color:#dfffee;display:flex;justify-content:space-between}.order-cat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px}.tools .mini-select{max-width:260px}.source-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.10);color:#ffe4a3;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:800}
@@ -3583,4 +3279,129 @@ try{document.documentElement.dataset.labflowBuild='V47_DEEP_CLEAN_PRESERVE';}cat
   },true);
 })();
 </script>
+
+
+<!-- LABFLOW_SAFE_REPAIR_DARK_LIGHT_PRINT_SECTIONS_START -->
+<style id="labflow-safe-repair-dark-light-print-sections">
+@media screen{
+  .topbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;flex-wrap:nowrap!important}
+  .topbar .page-title{flex:1 1 auto!important;min-width:180px!important}
+  #labflowTopActions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:16px!important;margin-inline-start:18px!important;flex:0 0 auto!important}
+  #labflowThemeToggle{
+    position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;z-index:2!important;
+    width:auto!important;min-width:82px!important;height:36px!important;padding:7px 11px!important;margin:0!important;
+    border-radius:12px!important;font-size:12px!important;font-weight:900!important;line-height:1!important;
+    display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;
+    box-shadow:0 8px 18px rgba(20,70,115,.10)!important;backdrop-filter:none!important;white-space:nowrap!important;
+  }
+  #topLogoutBtn{height:36px!important;min-width:126px!important;margin:0!important;padding:7px 12px!important;border-radius:12px!important;font-size:12px!important;white-space:nowrap!important}
+  html.lf-theme-light #labflowThemeToggle, html:not(.lf-theme-dark) #labflowThemeToggle{background:#fff!important;color:#102033!important;border:1px solid #d8e5f1!important}
+  html.lf-theme-dark{--bg:#07101d!important;--bg2:#0b1728!important;--panel:#101d30!important;--panel2:#13243b!important;--panel3:#0d1828!important;--text:#eef6ff!important;--muted:#aec1dc!important;--line:#2c4265!important;--brand:#19d184!important;--brand2:#48b7ff!important;--sidebar-bg:#08121f!important;--shadow:0 18px 60px rgba(0,0,0,.36)!important}
+  html.lf-theme-dark,html.lf-theme-dark body{background:radial-gradient(circle at 12% 0%,#173e63 0,#07101d 38%,#02060c 100%)!important;color:#eef6ff!important}
+  html.lf-theme-dark .app,html.lf-theme-dark .main{background:transparent!important;color:#eef6ff!important}
+  html.lf-theme-dark .side{background:linear-gradient(180deg,#08121f,#050b14)!important;border-left:1px solid rgba(72,183,255,.18)!important;color:#eef6ff!important}
+  html.lf-theme-dark .topbar{background:linear-gradient(180deg,rgba(18,33,52,.88),rgba(7,16,28,.78))!important;border:1px solid rgba(170,195,225,.16)!important;color:#eef6ff!important;box-shadow:0 18px 50px rgba(0,0,0,.28)!important}
+  html.lf-theme-dark .brand h1,html.lf-theme-dark .page-title h2,html.lf-theme-dark h2,html.lf-theme-dark h3,html.lf-theme-dark .section-head h3,html.lf-theme-dark .card-title-v11 b,html.lf-theme-dark .module-title,html.lf-theme-dark .home-head h3,html.lf-theme-dark .admin-hero-v12 h3{color:#eef6ff!important}
+  html.lf-theme-dark .brand p,html.lf-theme-dark .page-title p,html.lf-theme-dark .muted,html.lf-theme-dark .field label,html.lf-theme-dark .card-title-v11 small,html.lf-theme-dark .module-sub,html.lf-theme-dark .home-head p,html.lf-theme-dark .mini-muted{color:#aec1dc!important}
+  html.lf-theme-dark .card,html.lf-theme-dark .modal-card,html.lf-theme-dark .home-shell,html.lf-theme-dark .patient-card-v11,html.lf-theme-dark .tests-card-v11,html.lf-theme-dark .selected-card-v11,html.lf-theme-dark .order-bottom-v11,html.lf-theme-dark .advanced-card,html.lf-theme-dark .employee-card-v17,html.lf-theme-dark .shift-card-v17,html.lf-theme-dark .doctor-card,html.lf-theme-dark .offer-card,html.lf-theme-dark .stats-strip .mini-stat,html.lf-theme-dark .admin-hero-v12,html.lf-theme-dark .patient-history-box{background:linear-gradient(180deg,rgba(16,29,48,.96),rgba(9,18,31,.96))!important;border:1px solid rgba(159,177,201,.18)!important;color:#eef6ff!important;box-shadow:0 18px 60px rgba(0,0,0,.30)!important}
+  html.lf-theme-dark .order-topbar-v11,html.lf-theme-dark .reg-titlebar{background:linear-gradient(135deg,rgba(25,209,132,.12),rgba(72,183,255,.08),rgba(16,29,48,.96))!important;border-color:rgba(159,177,201,.18)!important;color:#eef6ff!important}
+  html.lf-theme-dark .module-tile,html.lf-theme-dark .tests-table-v11,html.lf-theme-dark .selected-table-v11,html.lf-theme-dark .test-table-scroll,html.lf-theme-dark .panel-glass,html.lf-theme-dark .selected-table-wrap,html.lf-theme-dark .summary-box,html.lf-theme-dark .notes-box,html.lf-theme-dark .money-box-v11,html.lf-theme-dark .note-v11,html.lf-theme-dark .selected-chips-v11,html.lf-theme-dark .template-card,html.lf-theme-dark .check,html.lf-theme-dark .manager-row-v12,html.lf-theme-dark .qr-preview,html.lf-theme-dark .qc-chart-box,html.lf-theme-dark .shift-box,html.lf-theme-dark .userbox,html.lf-theme-dark .logo-preview{background:#0b1728!important;border-color:#2c4265!important;color:#eef6ff!important}
+  html.lf-theme-dark input,html.lf-theme-dark select,html.lf-theme-dark textarea,html.lf-theme-dark .mini-select,html.lf-theme-dark .mini-result,html.lf-theme-dark .clean-select,html.lf-theme-dark .status-select,html.lf-theme-dark #backupOut,html.lf-theme-dark pre#backupOut{background:#071322!important;color:#eef6ff!important;border-color:#2c4265!important}
+  html.lf-theme-dark input::placeholder,html.lf-theme-dark textarea::placeholder{color:#7890a6!important}
+  html.lf-theme-dark table,html.lf-theme-dark .table-wrap{background:rgba(7,19,34,.72)!important;border-color:rgba(159,177,201,.16)!important}
+  html.lf-theme-dark th,html.lf-theme-dark .tests-table-v11 thead th,html.lf-theme-dark .selected-table-v11 thead th,html.lf-theme-dark .selected-order-table th,html.lf-theme-dark .test-select-table th{background:#13243b!important;color:#e6f3ff!important;border-bottom-color:rgba(159,177,201,.16)!important}
+  html.lf-theme-dark td,html.lf-theme-dark .selected-order-table td,html.lf-theme-dark .test-select-table td{background:transparent!important;color:#edf7ff!important;border-bottom-color:rgba(159,177,201,.12)!important}
+  html.lf-theme-dark tr:hover td{background:rgba(72,183,255,.06)!important}
+  html.lf-theme-dark .nav button{background:rgba(255,255,255,.035)!important;color:#d6e6f8!important;border-color:rgba(159,177,201,.15)!important;box-shadow:none!important}
+  html.lf-theme-dark .nav button:hover,html.lf-theme-dark .nav button.active{background:linear-gradient(135deg,rgba(25,209,132,.22),rgba(72,183,255,.15))!important;color:#fff!important;border-color:rgba(25,209,132,.55)!important}
+  html.lf-theme-dark #labflowThemeToggle{background:#0b1728!important;color:#eef6ff!important;border:1px solid #2c4265!important;box-shadow:0 8px 18px rgba(0,0,0,.24)!important}
+  html.lf-theme-dark .btn.ghost{background:transparent!important;color:#eef6ff!important;border-color:#2c4265!important}
+  html.lf-theme-dark .empty-order,html.lf-theme-dark .empty-tests{color:#ffe4a3!important;background:rgba(255,209,102,.07)!important;border-color:rgba(255,209,102,.28)!important}
+  @media(max-width:850px){.topbar{flex-wrap:wrap!important}.topbar .page-title{flex:1 1 100%!important}#labflowTopActions{width:100%!important;justify-content:flex-start!important;margin-inline-start:0!important;gap:12px!important}#labflowThemeToggle,#topLogoutBtn{height:35px!important}}
+}
+</style>
+<script id="labflow-safe-repair-dark-light-print-sections-script">
+(function(){
+  if(window.__LABFLOW_SAFE_REPAIR_DARK_LIGHT_PRINT_SECTIONS__) return;
+  window.__LABFLOW_SAFE_REPAIR_DARK_LIGHT_PRINT_SECTIONS__ = true;
+  function byId(id){return document.getElementById(id)}
+  function safe(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
+  function obj(v){return v&&typeof v==='object'?v:{}}
+  function arr(v){return Array.isArray(v)?v:[]}
+  function call(fn,arg,fallback){try{if(typeof window[fn]==='function') return window[fn](arg)}catch(e){} return fallback}
+  function moneyText(v){try{if(typeof window.money==='function') return window.money(v)}catch(e){} return String(v==null?'':v)}
+  function normal(v){return String(v||'').toLowerCase().replace(/[إأآا]/g,'ا').replace(/[ة]/g,'ه').replace(/[\s._\-/\\:]+/g,' ').trim()}
+  function labData(){try{return window.lab||lab||{}}catch(e){return window.lab||{}}}
+  function getTests(){try{return arr(window.tests||tests)}catch(e){return arr(window.tests)}}
+  function findCategory(it){
+    it=obj(it);
+    var cat=it.category||it.section||it.group||it.department||it.cat;
+    if(cat) return String(cat);
+    var tests=getTests(), id=it.testId||it.id, n=normal(it.name||it.enName||it.testName);
+    for(var i=0;i<tests.length;i++){
+      var t=tests[i]||{};
+      if(id && (t.id===id || t.testId===id)) return String(t.category||t.section||'غير مصنف');
+      if(n && (normal(t.name)===n || normal(t.enName)===n)) return String(t.category||t.section||'غير مصنف');
+    }
+    return 'غير مصنف';
+  }
+  function categoryTitle(it){var c=findCategory(it).trim();return c||'غير مصنف'}
+  function unitOf(it){it=obj(it);return it.unit||it.units||it.testUnit||call('labflowUnitForItem',it,'')||''}
+  function rangeOf(it){it=obj(it);return it.normalRange||it.range||it.reference||it.ref||call('labflowNormalRangeForItem',it,'')||'-'}
+  function flagOf(it){it=obj(it);var f=String(it.flag||'normal').toLowerCase();if(f==='high')return 'مرتفع H';if(f==='low')return 'منخفض L';return it.note||''}
+  function resultOf(it){it=obj(it);var r=it.result;if(r==null||String(r).trim()==='') r='-';return r}
+  function formPairs(it){
+    it=obj(it); var fd=obj(it.formData||it.cbcData||it.extraData), out=[];
+    Object.keys(fd).forEach(function(k){var v=fd[k]; if(v!=null && String(v).trim()!=='') out.push([k,v])});
+    if(out.length) return out;
+    var raw=String(it.result||'');
+    raw.split(/[;\n|]+/).forEach(function(part){var m=part.match(/^\s*([^:=]+)\s*[:=]\s*(.+?)\s*$/); if(m) out.push([m[1],m[2]])});
+    return out;
+  }
+  function testBlock(it,number){
+    it=obj(it); var name=it.name||it.testName||it.title||'-', en=it.enName&&it.enName!==name?it.enName:'';
+    var flag=String(it.flag||'normal').toLowerCase(), abnormal=(flag==='high'||flag==='low');
+    var pairs=formPairs(it), body='';
+    if(pairs.length>1){
+      body=pairs.map(function(p){return '<p class="lfp-line"><b>'+safe(p[0])+'</b><span>'+safe(p[1]||'-')+'</span></p>'}).join('');
+    }else{
+      body='<p class="lfp-line '+(abnormal?'abn':'')+'"><b>Result</b><span>'+safe(resultOf(it))+(flag==='high'?' H':flag==='low'?' L':'')+'</span></p>'+
+           '<p class="lfp-mini"><b>Unit:</b> '+safe(unitOf(it)||'-')+'</p>'+
+           '<p class="lfp-mini"><b>Normal Range:</b> '+safe(rangeOf(it)||'-')+'</p>';
+      var note=flagOf(it); if(note) body+='<p class="lfp-note">'+safe(note)+'</p>';
+    }
+    return '<article class="lfp-test"><h3><span>'+number+'</span>'+safe(name)+(en?'<small>'+safe(en)+'</small>':'')+'</h3>'+body+'</article>';
+  }
+  function grouped(items){
+    var groups=[], map={};
+    arr(items).forEach(function(it){var c=categoryTitle(it);if(!map[c]){map[c]=[];groups.push({name:c,items:map[c]})}map[c].push(it)});
+    return groups;
+  }
+  function dateText(v){var d=new Date(v||Date.now());if(isNaN(d))d=new Date();try{return d.toLocaleString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}catch(e){return d.toLocaleString()}}
+  function titleFile(o){o=obj(o);return 'Result - '+(o.patientName||o.name||'Patient')}
+  function buildPrint(o,tpl,autoPrint){
+    o=obj(o); var L=labData(), items=arr(o.items), theme=obj(L.theme), a=theme.primary||'#0ea5e9', b=theme.secondary||'#10b981';
+    var css='<style>@page{size:A4;margin:10mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{direction:rtl;background:#fff;color:#102033;font-family:Arial,Tahoma,"Segoe UI",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.lfp-page{background:#fff;min-height:100vh;border:1px solid #d8e5f1;border-radius:14px;overflow:hidden}.lfp-ribbon{height:7mm;background:linear-gradient(90deg,'+a+','+b+')}.lfp-head{padding:8mm;border-bottom:1px solid #d8e5f1;background:#fbfdff}.lfp-head h1{margin:0 0 2mm;font-size:22pt;color:#102033}.lfp-head p{margin:1mm 0;color:#60758c;font-size:10pt}.lfp-title{margin-top:4mm;padding:2.5mm 4mm;border-radius:999px;background:'+a+';color:#fff;display:inline-block;font-weight:900}.lfp-info{padding:6mm 8mm 3mm}.lfp-info p{margin:0 0 2.5mm;padding:3mm 4mm;background:#f8fbff;border:1px solid #d8e5f1;border-radius:10px}.lfp-info b{display:inline-block;min-width:35mm;color:#60758c}.lfp-section{margin:5mm 8mm 0;break-inside:avoid}.lfp-section h2{margin:0 0 3mm;padding:3mm 4mm;border-radius:11px;background:linear-gradient(90deg,'+a+','+b+');color:#fff;font-size:15pt}.lfp-test{break-inside:avoid;margin:0 0 4mm;padding:4mm;border:1px solid #d8e5f1;border-radius:12px;background:#fff}.lfp-test h3{margin:0 0 3mm;color:#102033;font-size:13pt}.lfp-test h3 span{display:inline-block;width:8mm;height:8mm;line-height:8mm;text-align:center;border-radius:50%;background:#eef7ff;color:#0f4f73;margin-left:2mm;font-size:9pt}.lfp-test h3 small{display:block;color:#60758c;font-size:9pt;margin-top:1mm}.lfp-line{margin:2mm 0;padding:3mm 4mm;border:1px solid #e6eef6;border-radius:10px;background:#fbfdff}.lfp-line b{display:block;color:#60758c;font-size:9pt;margin-bottom:1mm}.lfp-line span{display:block;font-size:16pt;font-weight:900;color:#0f8b62;direction:ltr;text-align:right}.lfp-line.abn span{color:#dc2626}.lfp-mini{margin:1.7mm 0;color:#405b74;font-size:10pt}.lfp-note{margin:2mm 0;padding:2.5mm 3mm;border-radius:9px;background:#fff7ed;color:#9a3412}.lfp-foot{margin:8mm;padding-top:4mm;border-top:1px dashed #94a3b8}.lfp-foot p{margin:2mm 0;color:#60758c}.lfp-sign{margin-top:8mm;text-align:left;color:#102033;font-weight:900}@media print{.lfp-page{border:0;border-radius:0}.lfp-section,.lfp-test{break-inside:avoid}}</style>';
+    var sections=grouped(items).map(function(g){return '<section class="lfp-section"><h2>'+safe(g.name)+'</h2>'+g.items.map(function(it,i){return testBlock(it,i+1)}).join('')+'</section>'}).join('');
+    if(!sections) sections='<section class="lfp-section"><h2>قسم التحاليل</h2><article class="lfp-test">لا توجد تحاليل داخل هذا الطلب.</article></section>';
+    var body='<main class="lfp-page"><div class="lfp-ribbon"></div><header class="lfp-head"><h1>'+safe(L.name||'مختبر')+'</h1><p>'+safe(L.address||'')+'</p><p>'+safe(L.phone||'')+'</p><div class="lfp-title">Laboratory Result</div></header><section class="lfp-info"><p><b>اسم المريض</b>'+safe(o.patientName||o.name||'-')+'</p><p><b>العمر</b>'+safe(o.age||'-')+'</p><p><b>الجنس</b>'+safe(o.gender||'-')+'</p><p><b>رقم الطلب</b>'+safe(o.orderNo||o.id||'-')+'</p><p><b>التاريخ</b>'+safe(dateText(o.resultedAt||o.createdAt||o.date))+'</p></section>'+sections+'<footer class="lfp-foot"><p>تم إصدار النتيجة بواسطة نظام LabFlow</p><div class="lfp-sign">توقيع وختم المختبر</div></footer></main>';
+    var printScript=autoPrint?('<scr'+'ipt>window.addEventListener("load",function(){setTimeout(function(){try{window.focus();window.print()}catch(e){}},350)});</scr'+'ipt>'):'';
+    return '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+safe(titleFile(o))+'</title>'+css+'</head><body>'+body+printScript+'</body></html>';
+  }
+  window.buildResultPrintHtml=function(o,tpl,autoPrint){return buildPrint(o,tpl,autoPrint!==false)};
+  try{buildResultPrintHtml=window.buildResultPrintHtml}catch(e){}
+  window.printReport=function(o,tpl){var html=window.buildResultPrintHtml(o,tpl||window.selectedTemplate,true), w=window.open('','_blank','width=980,height=760');if(!w){try{msg('err','المتصفح منع نافذة الطباعة. اسمح بالـ Popups.')}catch(e){}return}w.document.open();w.document.write(html);w.document.close();try{w.focus()}catch(e){}};
+  try{printReport=window.printReport}catch(e){}
+  window.printSelected=function(){var sel=byId('printOrder'), id=sel&&sel.value, list=[];try{list=arr(window.orders||orders)}catch(e){list=arr(window.orders)}var o=list.find(function(x){return x&&x.id===id});if(!o){try{msg('err','اختر طلب للطباعة')}catch(e){}return}window.printReport(o,window.selectedTemplate)};
+  try{printSelected=window.printSelected}catch(e){}
+  function currentTheme(){return document.documentElement.classList.contains('lf-theme-dark')?'dark':'light'}
+  function labelTheme(){var btn=byId('labflowThemeToggle');if(!btn)return;btn.innerHTML=currentTheme()==='dark'?'☀️ لايت':'🌙 دارك';btn.title=currentTheme()==='dark'?'تبديل إلى لايت مود':'تبديل إلى دارك مود'}
+  function applyTheme(mode){mode=mode==='dark'?'dark':'light';try{localStorage.setItem('labflow_theme_mode',mode)}catch(e){}document.documentElement.classList.remove('lf-theme-light','lf-theme-dark');document.documentElement.classList.add(mode==='dark'?'lf-theme-dark':'lf-theme-light');labelTheme()}
+  function installTopButton(){var btn=byId('labflowThemeToggle'), logout=byId('topLogoutBtn'), bar=document.querySelector('.topbar');if(!btn||!bar)return;var wrap=byId('labflowTopActions');if(!wrap){wrap=document.createElement('div');wrap.id='labflowTopActions';bar.appendChild(wrap)}wrap.appendChild(btn);if(logout)wrap.appendChild(logout);btn.onclick=function(){applyTheme(currentTheme()==='dark'?'light':'dark')};labelTheme()}
+  function init(){installTopButton();labelTheme()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  setTimeout(init,250);setTimeout(init,900);
+})();
+</script>
+<!-- LABFLOW_SAFE_REPAIR_DARK_LIGHT_PRINT_SECTIONS_END -->
 </body></html>
