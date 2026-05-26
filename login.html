@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -239,9 +241,10 @@
 
       show('ok', 'تم الدخول بنجاح...');
       const params = new URLSearchParams(window.location.search);
-      const isMobileMode = params.get('mobile') === '1' || params.get('app') === '1';
-      const nextPage = isMobileMode ? 'http://labflow.bs/mobile.html#home' : './index.html';
-      setTimeout(() => { window.location.href = nextPage; }, 400);
+      const isMobileMode = params.get('mobile') === '1' || params.get('app') === '1' || /; wv\)/i.test(navigator.userAgent);
+      const nextUrl = isMobileMode ? 'http://labflow.sbs/mobile.html#home' : './index.html';
+
+      setTimeout(() => { window.location.href = nextUrl; }, 400);
     } catch (err) {
       try { await auth.signOut(); } catch (e) {}
       show('err', err && err.message ? err.message : 'فشل تسجيل الدخول.');
