@@ -263,10 +263,11 @@
     border:0;border-radius:999px;padding:12px 16px;
     background:linear-gradient(135deg,#19d184,#48b7ff);color:#03141d;
     font-family:Tahoma,Arial,sans-serif;font-weight:900;box-shadow:0 14px 38px rgba(0,0,0,.22);
-    cursor:pointer;display:flex;align-items:center;gap:8px
+    cursor:pointer;display:none;align-items:center;gap:8px
   }
+  #labflowInstallBtn.show{display:flex!important}
   #labflowInstallBtn.hidden{display:none!important}
-  @media(max-width:600px){#labflowInstallBtn{left:12px;right:12px;bottom:84px;justify-content:center}}
+  @media(max-width:600px){#labflowInstallBtn.show{left:12px;right:12px;bottom:84px;justify-content:center}}
 </style>
 <button id="labflowInstallBtn" type="button">⬇ تثبيت LabFlow</button>
 <script>
@@ -291,22 +292,98 @@
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     deferredPrompt = e;
-    if(!isStandalone()) btn.classList.remove('hidden');
+    if(!isStandalone()){ btn.classList.remove('hidden'); btn.classList.add('show'); }
   });
 
   btn.addEventListener('click', async function(){
-    if(isStandalone()) { btn.classList.add('hidden'); return; }
+    if(isStandalone()) { btn.classList.remove('show'); btn.classList.add('hidden'); return; }
     if(deferredPrompt){
       deferredPrompt.prompt();
       try { await deferredPrompt.userChoice; } catch(e) {}
       deferredPrompt = null;
+      btn.classList.remove('show');
       btn.classList.add('hidden');
       return;
     }
     alert('إذا ما ظهرت نافذة التثبيت، افتح الموقع من Chrome أو Edge ثم من القائمة اختر Install app / تثبيت التطبيق. تأكد أن الموقع مرفوع على HTTPS مثل GitHub Pages.');
   });
 
-  window.addEventListener('appinstalled', function(){ btn.classList.add('hidden'); });
+  window.addEventListener('appinstalled', function(){ btn.classList.remove('show'); btn.classList.add('hidden'); });
+})();
+</script>
+
+<script>
+/* LabFlow basic client-side hardening.
+   ملاحظة: هذه حماية واجهة فقط لتقليل النسخ من المستخدم العادي، والحماية الحقيقية تبقى Firebase Rules/Auth. */
+(function(){
+  "use strict";
+
+  const BLOCK_MSG = "هذا الإجراء غير مسموح في نسخة LabFlow.";
+  let lastWarn = 0;
+
+  function warn(){
+    const now = Date.now();
+    if (now - lastWarn < 1200) return;
+    lastWarn = now;
+
+    try {
+      const m = document.getElementById("message");
+      if (m) {
+        m.className = "err";
+        m.innerText = BLOCK_MSG;
+      }
+    } catch(e) {}
+
+    try { console.clear(); } catch(e) {}
+  }
+
+  // منع كليك يمين وحفظ/طباعة/عرض المصدر من الاختصارات الشائعة.
+  document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+    warn();
+    return false;
+  }, true);
+
+  document.addEventListener("keydown", function(e){
+    const key = String(e.key || "").toLowerCase();
+    const code = String(e.code || "").toLowerCase();
+
+    const blocked =
+      key === "f12" ||
+      code === "f12" ||
+      (e.ctrlKey && key === "u") ||
+      (e.ctrlKey && key === "s") ||
+      (e.ctrlKey && key === "p") ||
+      (e.ctrlKey && e.shiftKey && ["i","j","c","u"].includes(key)) ||
+      (e.metaKey && e.altKey && ["i","j","c","u"].includes(key));
+
+    if (blocked) {
+      e.preventDefault();
+      e.stopPropagation();
+      warn();
+      return false;
+    }
+  }, true);
+
+  // تقليل السحب والنسخ من الصفحة.
+  document.addEventListener("dragstart", function(e){ e.preventDefault(); }, true);
+  document.addEventListener("selectstart", function(e){
+    const t = e.target;
+    if (t && /^(INPUT|TEXTAREA|SELECT)$/i.test(t.tagName)) return;
+    e.preventDefault();
+  }, true);
+
+  // محاولة كشف DevTools للمستخدم العادي بدون تعطيل التطبيق بشكل قوي.
+  let devWarned = false;
+  setInterval(function(){
+    const diffW = Math.abs(window.outerWidth - window.innerWidth);
+    const diffH = Math.abs(window.outerHeight - window.innerHeight);
+    if ((diffW > 180 || diffH > 180) && !devWarned) {
+      devWarned = true;
+      warn();
+    }
+    if (diffW < 120 && diffH < 120) devWarned = false;
+  }, 1500);
 })();
 </script>
 
